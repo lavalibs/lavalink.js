@@ -1,0 +1,33 @@
+{
+  "name": "@spectacles/lavalink.js",
+  "version": "0.1.0",
+  "description": "A Lavalink client for Javascript.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "gulp && env-cmd .env node --trace-warnings test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spec-tacles/lavalink.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/spec-tacles/lavalink.js/issues"
+  },
+  "homepage": "https://github.com/spec-tacles/lavalink.js#readme",
+  "devDependencies": {
+    "@spectacles/gateway": "^0.8.4",
+    "@types/ws": "^4.0.1",
+    "axios": "^0.17.1",
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-sourcemaps": "^2.6.4",
+    "gulp-typescript": "^4.0.1",
+    "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "ws": "^4.0.0"
+  }
+}
