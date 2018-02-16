@@ -1,5 +1,5 @@
 {
-  "name": "lavalink.js",
+  "name": "lavalink",
   "version": "0.1.0",
   "description": "A Lavalink client for Javascript.",
   "main": "dist/index.js",
