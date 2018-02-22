@@ -1,6 +1,7 @@
 import * as WebSocket from 'ws';
 import Connection from './Connection';
 import Player from './Player';
+import { EventEmitter } from 'events';
 
 export interface VoiceStateUpdate {
   guild_id: string;
@@ -26,7 +27,7 @@ export interface ClientOptions {
   userID: string;
 }
 
-export default class Client {
+export default class Client extends EventEmitter {
   public password: string;
   public shards: number;
   public userID: string;
@@ -38,6 +39,7 @@ export default class Client {
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
   constructor({ password, shards, userID }: ClientOptions) {
+    super();
     this.password = password;
     this.shards = shards;
     this.userID = userID;

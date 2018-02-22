@@ -1,9 +1,8 @@
 import * as WebSocket from 'ws';
 import Client from './Client';
 import Player from './Player';
-import { EventEmitter } from 'events';
 
-export default class Connection extends EventEmitter {
+export default class Connection {
   public readonly client: Client;
   public url: string;
   public options: WebSocket.ClientOptions;
@@ -11,7 +10,6 @@ export default class Connection extends EventEmitter {
   public ws?: WebSocket;
 
   constructor(client: Client, url: string, options: WebSocket.ClientOptions = {}) {
-    super();
     this.client = client;
     this.url = url;
     this.options = options;
@@ -39,7 +37,7 @@ export default class Connection extends EventEmitter {
   }
 
   public onError(err?: any) {
-    this.emit('error', err);
+    this.client.emit('error', err);
     this.onClose();
   }
 
@@ -61,7 +59,7 @@ export default class Connection extends EventEmitter {
     else buf = d;
 
     const pk: any = JSON.parse(buf.toString());
-    this.emit(pk.op, pk);
+    this.client.emit(pk.op, pk);
   }
 
   public send(d: any): Promise<void> {
