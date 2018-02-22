@@ -4,5 +4,5 @@ node_modules/
 .vscode/
 .env
 tsconfig.json
-gulpfile.json
+gulpfile.js
 webpack.config.js
