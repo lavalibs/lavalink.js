@@ -3,18 +3,21 @@ import Client, { VoiceServerUpdate } from './Client';
 export default class Player {
   public readonly client: Client;
   public guildID: string;
+  public playing: boolean = false;
 
   constructor(client: Client, guildID: string) {
     this.client = client;
     this.guildID = guildID;
   }
 
-  public play(track: string, { start = 0, end = 0 }: { start?: number, end?: number } = {}) {
-    return this.send('play', {
+  public async play(track: string, { start = 0, end = 0 }: { start?: number, end?: number } = {}) {
+    await this.send('play', {
       track,
       startTime: start,
       endTime: end,
     });
+
+    this.playing = true;
   }
 
   public setVolume(vol: number) {
@@ -29,8 +32,9 @@ export default class Player {
     return this.send('pause', { pause: paused });
   }
 
-  public stop() {
-    return this.send('stop');
+  public async stop() {
+    await this.send('stop');
+    this.playing = false;
   }
 
   public voiceUpdate(sessionId: string, event: VoiceServerUpdate) {
