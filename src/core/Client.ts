@@ -34,8 +34,8 @@ export default class Client {
   public connections: Connection[] = [];
   public players: Map<string, Player> = new Map();
 
-  private _voiceStates: Map<string, string> = new Map();
-  private _voiceServers: Map<string, VoiceServerUpdate> = new Map();
+  public voiceStates: Map<string, string> = new Map();
+  public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
   constructor({ password, shards, userID }: ClientOptions) {
     this.password = password;
@@ -71,19 +71,21 @@ export default class Client {
   public voiceStateUpdate(packet: VoiceStateUpdate) {
     if (packet.user_id !== this.userID) return Promise.resolve(false);
 
-    this._voiceStates.set(packet.guild_id, packet.session_id);
+    this.voiceStates.set(packet.guild_id, packet.session_id);
     return this._tryConnection(packet.guild_id);
   }
 
   public voiceServerUpdate(packet: VoiceServerUpdate) {
-    this._voiceServers.set(packet.guild_id, packet);
+    this.voiceServers.set(packet.guild_id, packet);
     return this._tryConnection(packet.guild_id);
   }
 
   private async _tryConnection(guildID: string) {
-    const state = this._voiceStates.get(guildID);
-    const server = this._voiceServers.get(guildID);
+    const state = this.voiceStates.get(guildID);
+    const server = this.voiceServers.get(guildID);
     if (!state || !server) return false;
+
+    this.voiceServers.delete(guildID);
 
     let player = this.players.get(guildID);
     if (!player) {
