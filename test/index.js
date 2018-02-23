@@ -1,5 +1,6 @@
 const { Client } = require('../dist');
 const axios = require('axios');
+const { inspect } = require('util');
 const { Client: Gateway } = require('@spectacles/gateway');
 
 const gateway = new Gateway(process.env.TOKEN);
@@ -8,6 +9,8 @@ const client = new Client({
   shards: 1,
   userID: process.env.USER_ID,
 });
+
+gateway.on('READY', console.log);
 
 gateway.on('MESSAGE_CREATE', async m => {
   if (m.content === 'join') {
@@ -32,7 +35,7 @@ gateway.on('MESSAGE_CREATE', async m => {
     const { data } = await axios({
       method: 'get',
       url: 'http://localhost:8081/loadtracks',
-      params: { identifier: 'dQw4w9WgXcQ' },
+      params: { identifier: 'https://www.twitch.tv/monstercat' },
       headers: { Authorization: client.password },
     });
 
@@ -42,6 +45,8 @@ gateway.on('MESSAGE_CREATE', async m => {
 
 gateway.on('VOICE_STATE_UPDATE', s => client.voiceStateUpdate(s));
 gateway.on('VOICE_SERVER_UPDATE', s => client.voiceServerUpdate(s));
+gateway.on('close', console.log);
+gateway.on('error', (shard, err) => console.log(inspect(err, { depth: 2 })));
 
 (async () => {
   try {

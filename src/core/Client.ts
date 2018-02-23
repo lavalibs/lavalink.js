@@ -87,7 +87,7 @@ export default class Client extends EventEmitter {
     const server = this.voiceServers.get(guildID);
     if (!state || !server) return false;
 
-    this.voiceServers.delete(guildID);
+    // this.voiceServers.delete(guildID);
 
     let player = this.players.get(guildID);
     if (!player) {
