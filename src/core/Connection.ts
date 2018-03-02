@@ -27,7 +27,6 @@ export default class Connection {
     };
 
     const ws = this.ws = new WebSocket(this.url, Object.assign({ headers }, this.options));
-    this.client.connections.push(this);
 
     ws.once('close', this.onClose);
     ws.once('error', this.onError);
@@ -42,9 +41,11 @@ export default class Connection {
   }
 
   public async onClose() {
-    this._ws.removeListener('close', this.onClose);
-    this._ws.removeListener('error', this.onError);
-    this._ws.removeListener('message', this.onMessage);
+    if (this.ws) {
+      this.ws.removeListener('close', this.onClose);
+      this.ws.removeListener('error', this.onError);
+      this.ws.removeListener('message', this.onMessage);
+    }
 
     await new Promise(r => setTimeout(r, 1e3 + Math.random() - 0.5));
     await this.connect();
@@ -76,15 +77,14 @@ export default class Connection {
 
   public send(d: any): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._ws.send(JSON.stringify(d), (err) => {
-        if (err) reject(err);
-        else resolve();
-      });
+      if (this.ws) {
+        this.ws.send(JSON.stringify(d), (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      } else {
+        reject(new Error('no WebSocket connection available'));
+      }
     });
-  }
-
-  protected get _ws(): WebSocket {
-    if (this.ws) return this.ws;
-    throw new Error('no WebSocket connection available');
   }
 }

@@ -1,6 +1,7 @@
 import * as WebSocket from 'ws';
 import Connection from './Connection';
 import Player from './Player';
+import PlayerStore from './PlayerStore';
 import { EventEmitter } from 'events';
 
 export interface VoiceStateUpdate {
@@ -32,8 +33,8 @@ export default class Client extends EventEmitter {
   public shards: number;
   public userID: string;
 
-  public connections: Connection[] = [];
-  public players: Map<string, Player> = new Map();
+  public connection?: Connection;
+  public players: PlayerStore = new PlayerStore(this);
 
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
@@ -45,29 +46,25 @@ export default class Client extends EventEmitter {
     this.userID = userID;
   }
 
-  public getConnection(timeout: number = 1e3): Promise<Connection> {
-    return new Promise<Connection>(r => {
-      const scan = () => {
-        for (const conn of this.connections) {
-          if (conn.ws && conn.ws.readyState === WebSocket.OPEN) {
-            r(conn);
-            return;
-          }
-        }
-
-        setTimeout(scan, timeout);
-      };
-
-      scan();
-    });
+  public async connect(url: string, options?: WebSocket.ClientOptions) {
+    const conn = this.connection = new Connection(this, url);
+    await conn.connect();
+    return conn;
   }
 
-  public connect(...urls: string[]) {
-    return Promise.all(urls.map(async u => {
-      const conn = new Connection(this, u);
-      await conn.connect();
-      return conn;
-    }));
+  public join(guildID: string, channelID: string, { mute = false, deaf = true }) {
+    this.voiceServers.delete(guildID);
+    this.voiceStates.delete(guildID);
+
+    return {
+      op: 4,
+      d: {
+        guild_id: guildID,
+        channel_id: channelID,
+        self_deaf: deaf,
+        self_mute: mute,
+      },
+    };
   }
 
   public voiceStateUpdate(packet: VoiceStateUpdate) {
@@ -87,15 +84,7 @@ export default class Client extends EventEmitter {
     const server = this.voiceServers.get(guildID);
     if (!state || !server) return false;
 
-    // this.voiceServers.delete(guildID);
-
-    let player = this.players.get(guildID);
-    if (!player) {
-      player = new Player(this, guildID);
-      this.players.set(guildID, player);
-    }
-
-    await player.voiceUpdate(state, server);
+    await this.players.get(guildID).voiceUpdate(state, server);
     return true;
   }
 }

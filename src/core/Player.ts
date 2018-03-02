@@ -44,11 +44,15 @@ export default class Player {
     });
   }
 
-  public async send(op: string, d: any = {}) {
-    const conn = await this.client.getConnection();
-    return conn.send(Object.assign({
-      op,
-      guildId: this.guildID,
-    }, d));
+  public send(op: string, d: any = {}) {
+    const conn = this.client.connection;
+    if (conn) {
+      return conn.send(Object.assign({
+        op,
+        guildId: this.guildID,
+      }, d));
+    } else {
+      return Promise.reject(new Error('no WebSocket connection available'));
+    }
   }
 }

@@ -41,6 +41,10 @@ gateway.on('MESSAGE_CREATE', async m => {
 
     client.players.get('281630801660215296').play(data[0].track);
   }
+
+  if (m.content === 'reconnect') {
+    gateway.connections.get(0).reconnect();
+  }
 });
 
 gateway.on('VOICE_STATE_UPDATE', s => client.voiceStateUpdate(s));
