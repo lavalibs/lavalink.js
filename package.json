@@ -22,7 +22,6 @@
   "devDependencies": {
     "@spectacles/gateway": "^0.8.4",
     "@types/ws": "^4.0.1",
-    "axios": "^0.17.1",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.4",
