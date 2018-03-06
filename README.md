@@ -21,7 +21,7 @@ gateway.spawn();
 
 ## [How to connect](https://discordapp.com/developers/docs/topics/voice-connections#connecting-to-voice)
 
-Send an OP 4 packet to Discord and appropriately handle Discord's response. This library recommends that you use its built-in `join` method to generate the packet properly, as otherwise there may be issues with properly forwarding the response packets to Discord.
+Send an OP 4 packet to Discord and appropriately handle Discord's response. This library recommends that you use its built-in `join` method to generate the packet properly, as otherwise there may be issues with properly forwarding the response packets to Lavalink.
 
 ```js
 gateway.connections.get(shardID).send(voice.join(guildID, channelID, { deaf: true, mute: false }));
