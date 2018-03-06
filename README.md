@@ -21,15 +21,10 @@ gateway.spawn();
 
 ## [How to connect](https://discordapp.com/developers/docs/topics/voice-connections#connecting-to-voice)
 
-Send an OP 4 packet to Discord and appropriately handle Discord's response.
+Send an OP 4 packet to Discord and appropriately handle Discord's response. This library recommends that you use its built-in `join` method to generate the packet properly, as otherwise there may be issues with properly forwarding the response packets to Discord.
 
 ```js
-gateway.connections.get(shardID).send(4, {
-  guild_id: 'a guild id',
-  channel_id: 'a channel id',
-  self_mute: false,
-  self_deaf: true,
-});
+gateway.connections.get(shardID).send(voice.join(guildID, channelID, { deaf: true, mute: false }));
 ```
 
 This example uses Spectacles gateway, but you're welcome to use any Discord library so long as you provide the raw packet to the `voiceStateUpdate` and `voiceServerUpdate` methods as shown below.
@@ -41,7 +36,7 @@ gateway.on('VOICE_SERVER_UPDATE', info => voice.voiceServerUpdate(info)); // for
 
 ## How to use
 
-Players are available in a map keyed by guild ID.
+Players are available in a map keyed by guild ID, and are always available: if no player has yet been generated for a guild, it will be created.
 
 ```js
 const player = voice.players.get('a guild id');
