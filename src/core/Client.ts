@@ -24,13 +24,11 @@ export interface VoiceServerUpdate {
 
 export interface ClientOptions {
   password: string;
-  shards: number;
   userID: string;
 }
 
 export default class Client extends EventEmitter {
   public password: string;
-  public shards: number;
   public userID: string;
 
   public connection?: Connection;
@@ -39,10 +37,9 @@ export default class Client extends EventEmitter {
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
-  constructor({ password, shards, userID }: ClientOptions) {
+  constructor({ password, userID }: ClientOptions) {
     super();
     this.password = password;
-    this.shards = shards;
     this.userID = userID;
   }
 

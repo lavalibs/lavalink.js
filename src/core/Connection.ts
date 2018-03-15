@@ -22,7 +22,7 @@ export default class Connection {
   public async connect() {
     const headers = {
       Authorization: this.client.password,
-      'Num-Shards': this.client.shards,
+      'Num-Shards': 1,
       'User-Id': this.client.userID,
     };
 
