@@ -14,7 +14,7 @@ export default class Player {
     this.client.voiceServers.delete(this.guildID);
     this.client.voiceStates.delete(this.guildID);
 
-    return this.client.send({
+    return this.client.send(this.guildID, {
       op: 4,
       d: {
         guild_id: this.guildID,

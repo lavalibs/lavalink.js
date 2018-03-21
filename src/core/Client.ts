@@ -28,7 +28,7 @@ export interface ClientOptions {
 }
 
 export default abstract class Client extends EventEmitter {
-  public abstract send(pk: any): Promise<any>;
+  public abstract send(guild: string, pk: any): Promise<any>;
 
   public password: string;
   public userID: string;

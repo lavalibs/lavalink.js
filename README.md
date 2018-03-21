@@ -6,28 +6,34 @@ A Javascript wrapper for the Lavalink audio client for Discord.
 
 ```js
 const { Client } = require('lavalink');
-const { Client: Gateway } = require('@spectacles/gateway');
 
-const gateway = new Gateway('token');
-const voice = new Client({
-  password: '', // your Lavalink password
-  shards: 1, // how many shards your bot is running
-  userID: '', // the user ID of your bot
-});
+const voice = new class extends Client {
+  constructor() {
+    super({
+      password: '', // your Lavalink password
+      userID: '', // the user ID of your bot
+    });
+  }
 
-voice.connect('ws://localhost'); // the websocket URL of your Lavalink app
-gateway.spawn();
+  send(guild, packet) {
+    // send this packet to the gateway
+  }
+};
+
+voice.connect('ws://localhost:port'); // the websocket URL of your Lavalink app
 ```
+
+You must extend the provided client with your own `send` method. You can do this by either modifying the client prototype or following the pattern above: either way, you must provide a method that sends packets to the gateway through the appropriate shard.
 
 ## [How to connect](https://discordapp.com/developers/docs/topics/voice-connections#connecting-to-voice)
 
-Send an OP 4 packet to Discord and appropriately handle Discord's response. This library recommends that you use its built-in `join` method to generate the packet properly, as otherwise there may be issues with properly forwarding the response packets to Lavalink.
+Use the provided `Playlist#join(channel)` method to join voice channels. This method will generate the necessary packet and send it to the `Client#send` method as provided by you.
 
 ```js
-gateway.connections.get(shardID).send(voice.join(guildID, channelID, { deaf: true, mute: false }));
+voice.players.set('guild id').join('channel id');
 ```
 
-This example uses Spectacles gateway, but you're welcome to use any Discord library so long as you provide the raw packet to the `voiceStateUpdate` and `voiceServerUpdate` methods as shown below.
+Provide the raw packet to the `voiceStateUpdate` and `voiceServerUpdate` methods as shown below.
 
 ```js
 gateway.on('VOICE_STATE_UPDATE', state => voice.voiceStateUpdate(state)); // forward voice state updates
@@ -49,3 +55,17 @@ const player = voice.players.get('a guild id');
 - `seek(position)`
 - `pause(paused = true)`
 - `stop()`
+- `join(channel, { deaf = true, mute = false })`
+
+## HTTP
+
+This library comes with an experimental HTTP module for easily requesting data from a Lavalink instance.
+
+```js
+const { Http } = require('lavalink');
+const http = new Http(voice, 'http://localhost:port'); // the 2nd and 3rd params are passed directly to the Node URL constructor
+
+http.load('identifier'); // => Promise<Array<Track>>
+http.decode('track'); // => Promise<Track>
+http.decode(['track', 'other track']); // => Promise<Array<Track>>
+```
