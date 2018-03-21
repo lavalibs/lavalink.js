@@ -10,6 +10,21 @@ export default class Player {
     this.guildID = guildID;
   }
 
+  public join(channel: string, { deaf = true, mute = false }) {
+    this.client.voiceServers.delete(this.guildID);
+    this.client.voiceStates.delete(this.guildID);
+
+    return this.client.send({
+      op: 4,
+      d: {
+        guild_id: this.guildID,
+        channel_id: channel,
+        self_deaf: deaf,
+        self_mute: mute,
+      },
+    })
+  }
+
   public async play(track: string, { start = 0, end = 0 }: { start?: number, end?: number } = {}) {
     await this.send('play', {
       track,

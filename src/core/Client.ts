@@ -27,7 +27,9 @@ export interface ClientOptions {
   userID: string;
 }
 
-export default class Client extends EventEmitter {
+export default abstract class Client extends EventEmitter {
+  public abstract send(pk: any): Promise<any>;
+
   public password: string;
   public userID: string;
 
@@ -47,21 +49,6 @@ export default class Client extends EventEmitter {
     const conn = this.connection = new Connection(this, url);
     await conn.connect();
     return conn;
-  }
-
-  public join(guildID: string, channelID: string, { mute = false, deaf = true }) {
-    this.voiceServers.delete(guildID);
-    this.voiceStates.delete(guildID);
-
-    return {
-      op: 4,
-      d: {
-        guild_id: guildID,
-        channel_id: channelID,
-        self_deaf: deaf,
-        self_mute: mute,
-      },
-    };
   }
 
   public voiceStateUpdate(packet: VoiceStateUpdate) {
