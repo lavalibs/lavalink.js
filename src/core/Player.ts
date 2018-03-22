@@ -10,6 +10,16 @@ export default class Player {
     this.guildID = guildID;
   }
 
+  public leave() {
+    return this.client.send(this.guildID, {
+      op: 4,
+      d: {
+        guild_id: this.guildID,
+        channel_id: null,
+      },
+    });
+  }
+
   public join(channel: string, { deaf = true, mute = false }) {
     this.client.voiceServers.delete(this.guildID);
     this.client.voiceStates.delete(this.guildID);
