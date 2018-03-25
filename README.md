@@ -30,7 +30,7 @@ You must extend the provided client with your own `send` method. You can do this
 Use the provided `Playlist#join(channel)` method to join voice channels. This method will generate the necessary packet and send it to the `Client#send` method as provided by you.
 
 ```js
-voice.players.set('guild id').join('channel id');
+voice.players.get('guild id').join('channel id');
 ```
 
 Provide the raw packet to the `voiceStateUpdate` and `voiceServerUpdate` methods as shown below.
