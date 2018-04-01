@@ -55,7 +55,7 @@ const player = voice.players.get('a guild id');
 - `seek(position)`
 - `pause(paused = true)`
 - `stop()`
-- `join(channel, { deaf = true, mute = false })`
+- `join(channel, { deaf = false, mute = false })`
 
 ## HTTP
 
