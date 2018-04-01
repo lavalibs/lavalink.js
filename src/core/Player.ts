@@ -20,7 +20,7 @@ export default class Player {
     });
   }
 
-  public join(channel: string, { deaf = true, mute = false }) {
+  public join(channel: string, { deaf = false, mute = false } = {}) {
     this.client.voiceServers.delete(this.guildID);
     this.client.voiceStates.delete(this.guildID);
 

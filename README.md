@@ -15,7 +15,7 @@ const voice = new class extends Client {
     });
   }
 
-  send(guild, packet) {
+  send(guildID, packet) {
     // send this packet to the gateway
   }
 };
@@ -27,7 +27,7 @@ You must extend the provided client with your own `send` method. You can do this
 
 ## [How to connect](https://discordapp.com/developers/docs/topics/voice-connections#connecting-to-voice)
 
-Use the provided `Playlist#join(channel)` method to join voice channels. This method will generate the necessary packet and send it to the `Client#send` method as provided by you.
+Use the provided `Player#join(channelID)` method to join voice channels. This method will generate the necessary packet and send it to the `Client#send` method as provided by you.
 
 ```js
 voice.players.get('guild id').join('channel id');
