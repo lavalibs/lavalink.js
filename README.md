@@ -12,6 +12,10 @@ const voice = new class extends Client {
     super({
       password: '', // your Lavalink password
       userID: '', // the user ID of your bot
+      hosts: {
+        rest: '', // the http host of your lavalink instance (optional)
+        ws: '', // the ws host of your lavalink instance (optional)
+      },
     });
   }
 
@@ -20,7 +24,7 @@ const voice = new class extends Client {
   }
 };
 
-voice.connect('ws://localhost:port'); // the websocket URL of your Lavalink app
+voice.connect('ws://localhost:port'); // the websocket URL of your Lavalink app (optional if specified in options)
 ```
 
 You must extend the provided client with your own `send` method. You can do this by either modifying the client prototype or following the pattern above: either way, you must provide a method that sends packets to the gateway through the appropriate shard.
