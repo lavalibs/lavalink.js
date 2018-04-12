@@ -52,7 +52,10 @@ export default abstract class Client extends EventEmitter {
     this.password = password;
     this.userID = userID;
 
-    if (hosts && hosts.rest) this.http = new Http(this, hosts.rest);
+    if (hosts) {
+      if (hosts.rest) this.http = new Http(this, hosts.rest);
+      if (hosts.ws) this._wsHost = hosts.ws;
+    }
 
     this.on('event', (d) => {
       if (['TrackExceptionEvent', 'TrackStuckEvent'].includes(d.type)) this.emit('error', d);
