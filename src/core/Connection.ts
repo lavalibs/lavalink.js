@@ -61,17 +61,7 @@ export default class Connection {
 
     const pk: any = JSON.parse(buf.toString());
 
-    // TODO: collect stats for load balancing
-    if (pk.op === 'event') {
-      let player = this.client.players.get(pk.guildId);
-      if (!player) {
-        player = new Player(this.client, pk.guildId);
-        this.client.players.set(pk.guildId, player);
-      }
-
-      player.playing = false;
-    }
-
+    if (pk.guildId) this.client.players.get(pk.guildId).emit(pk.op, pk);
     this.client.emit(pk.op, pk);
   }
 

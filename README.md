@@ -48,7 +48,7 @@ Players are available in a map keyed by guild ID, and are always available: if n
 const player = voice.players.get('a guild id');
 ```
 
-### Available methods
+### `Player` methods
 
 - `play(track, { start, end })`
 - `setVolume(volume)`
@@ -59,13 +59,9 @@ const player = voice.players.get('a guild id');
 
 ## HTTP
 
-This library comes with an experimental HTTP module for easily requesting data from a Lavalink instance.
+You can fetch tracks for the above methods by calling the `Client#load` method with an idenfitier. This will return a result as shown in the [example implementation](https://github.com/Frederikam/Lavalink/blob/master/IMPLEMENTATION.md#rest-api).
 
 ```js
-const { Http } = require('lavalink');
-const http = new Http(voice, 'http://localhost:port'); // the 2nd and 3rd params are passed directly to the Node URL constructor
-
-http.load('identifier'); // => Promise<Array<Track>>
-http.decode('track'); // => Promise<Track>
-http.decode(['track', 'other track']); // => Promise<Array<Track>>
+const songs = await voice.load('ytsearch:monstercat');
+voice.players.get('guild.id').play(songs[0].track);
 ```

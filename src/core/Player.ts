@@ -1,13 +1,36 @@
 import Client, { VoiceServerUpdate } from './Client';
+import { EventEmitter } from 'events';
 
-export default class Player {
+export enum Status {
+  INSTANTIATED,
+  PLAYING,
+  PAUSED,
+  ENDED,
+  ERRORED,
+}
+
+export default class Player extends EventEmitter {
   public readonly client: Client;
   public guildID: string;
-  public playing: boolean = false;
+  public status: Status = Status.INSTANTIATED;
 
   constructor(client: Client, guildID: string) {
+    super();
     this.client = client;
     this.guildID = guildID;
+
+    this.on('event', (d) => {
+      if (d.type === 'TrackEndEvent') this.status = Status.ENDED;
+      else this.status = Status.ERRORED;
+    })
+  }
+
+  public get playing() {
+    return this.status === Status.PLAYING;
+  }
+
+  public get paused() {
+    return this.status === Status.PAUSED;
   }
 
   public leave() {
@@ -42,7 +65,7 @@ export default class Player {
       endTime: end,
     });
 
-    this.playing = true;
+    this.status = Status.PLAYING;
   }
 
   public setVolume(vol: number) {
@@ -54,12 +77,14 @@ export default class Player {
   }
 
   public pause(paused: boolean = true) {
+    if (paused) this.status = Status.PAUSED;
+    else this.status = Status.PLAYING;
+
     return this.send('pause', { pause: paused });
   }
 
   public async stop() {
     await this.send('stop');
-    this.playing = false;
   }
 
   public voiceUpdate(sessionId: string, event: VoiceServerUpdate) {
