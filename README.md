@@ -57,6 +57,16 @@ const player = voice.players.get('a guild id');
 - `stop()`
 - `join(channel, { deaf = false, mute = false })`
 
+### Events
+
+The client and players are event emitters. Events will only get emitted on a player if the event has a guild ID. `TrackExceptionEvent` and `TrackStuckEvent` types will get re-emitted on the client as `error` events. Events are emitted with the name as the `op` property from the event; see the [lavalink implementation page](https://github.com/Frederikam/Lavalink/blob/master/IMPLEMENTATION.md#incoming-messages) for more information.
+
+```js
+voice.players.get('guild id').on('event', (d) => {
+  console.log('track ended!', d);
+});
+```
+
 ## HTTP
 
 You can fetch tracks for the above methods by calling the `Client#load` method with an idenfitier. This will return a result as shown in the [example implementation](https://github.com/Frederikam/Lavalink/blob/master/IMPLEMENTATION.md#rest-api).
