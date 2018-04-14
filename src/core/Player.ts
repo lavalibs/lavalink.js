@@ -39,6 +39,8 @@ export default class Player extends EventEmitter {
       d: {
         guild_id: this.guildID,
         channel_id: null,
+        self_mute: false,
+        self_deaf: false
       },
     });
   }
