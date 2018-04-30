@@ -7,6 +7,7 @@ export enum Status {
   PAUSED,
   ENDED,
   ERRORED,
+  STUCK
 }
 
 export default class Player extends EventEmitter {
@@ -21,7 +22,8 @@ export default class Player extends EventEmitter {
 
     this.on('event', (d) => {
       if (d.type === 'TrackEndEvent') this.status = Status.ENDED;
-      else this.status = Status.ERRORED;
+      else if (d.type === "TrackExceptionEvent") this.status = Status.ERRORED
+      else this.status = Status.STUCK;
     })
   }
 
@@ -78,15 +80,15 @@ export default class Player extends EventEmitter {
     return this.send('seek', { position });
   }
 
-  public pause(paused: boolean = true) {
+  public async pause(paused: boolean = true) {
+    await this.send('pause', { pause: paused });
+
     if (paused) this.status = Status.PAUSED;
     else this.status = Status.PLAYING;
-
-    return this.send('pause', { pause: paused });
   }
 
-  public async stop() {
-    await this.send('stop');
+  public stop() {
+    return this.send('stop');
   }
 
   public voiceUpdate(sessionId: string, event: VoiceServerUpdate) {
