@@ -87,7 +87,7 @@ export default class Player extends EventEmitter {
     else this.status = Status.PLAYING;
   }
 
-  public async stop() {
+  public stop() {
     return this.send('stop');
   }
 
