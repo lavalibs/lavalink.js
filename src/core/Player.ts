@@ -7,7 +7,7 @@ export enum Status {
   PAUSED,
   ENDED,
   ERRORED,
-  STUCKED
+  STUCK
 }
 
 export default class Player extends EventEmitter {
@@ -23,7 +23,7 @@ export default class Player extends EventEmitter {
     this.on('event', (d) => {
       if (d.type === 'TrackEndEvent') this.status = Status.ENDED;
       else if (d.type === "TrackExceptionEvent") this.status = Status.ERRORED
-      else this.status = Status.STUCKED;
+      else this.status = Status.STUCK;
     })
   }
 
