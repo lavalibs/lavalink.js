@@ -23,7 +23,6 @@
     "@spectacles/gateway": "^0.8.4",
     "@types/ws": "^4.0.1",
     "del": "^3.0.0",
-    "discord.js": "^11.3.2",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^4.0.1",
