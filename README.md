@@ -101,15 +101,4 @@ voice.players.get('guild.id').play(songs[0].track);
 
 ## Discord.js
 
-This module comes with a built-in wrapper for Discord.js. It defines two extra utility properties: `Client#lavalink` (this client) and `Guild#player` (the player for that guild).
-
-```js
-const { discordjs } = require('lavalink');
-const { Client } = require('discord.js');
-const client = new Client();
-discordjs(client, {
-  userID: '',
-  password: '',
-  // etc.
-});
-```
+blame [@iCrawl](https://github.com/iCrawl)
