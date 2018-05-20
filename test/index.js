@@ -1,5 +1,4 @@
 const { Client } = require('../dist');
-const axios = require('axios');
 const { inspect } = require('util');
 const { Client: Gateway } = require('@spectacles/gateway');
 
@@ -32,14 +31,8 @@ gateway.on('MESSAGE_CREATE', async m => {
   }
 
   if (m.content === 'play') {
-    const { data } = await axios({
-      method: 'get',
-      url: 'http://localhost:8081/loadtracks',
-      params: { identifier: 'https://www.twitch.tv/monstercat' },
-      headers: { Authorization: client.password },
-    });
-
-    client.players.get('281630801660215296').play(data[0].track);
+    const tracks = await client.load('https://www.twitch.tv/monstercat');
+    client.players.get('281630801660215296').play(tracks[0].track);
   }
 
   if (m.content === 'reconnect') {
