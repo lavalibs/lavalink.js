@@ -52,14 +52,33 @@ Players are available in a map keyed by guild ID, and are always available: if n
 const player = voice.players.get('a guild id');
 ```
 
-### `Player` methods
+### `Player` reference
 
-- `play(track, { start, end })`
-- `setVolume(volume)`
-- `seek(position)`
-- `pause(paused = true)`
-- `stop()`
-- `join(channel, { deaf = false, mute = false })`
+- *readonly* `client: Client`
+- `guildID: string`
+- `status: Status`
+- `play(track: string, { start?: number, end?: number } = {}): Promise<void>`
+- `setVolume(volume: number): Promise<void>`
+- `seek(position: number): Promise<void>`
+- `pause(paused = true): Promise<void>`
+- `stop(): Promise<void>`
+- `join(channel: string, { deaf = false, mute = false }): Promise<void>`
+
+### `Client` reference
+
+- *abstract* `send(guildID: string, pk: any): Promise<void>`
+- `password: string`
+- `userID: string`
+- `connection?: Connection`
+- `players: PlayerStore`
+- `http?: Http`
+- `voiceStates: Map<string, string>`
+- `voiceServers: Map<string, VoiceServerUpdate>`
+- `load(identifier: string): Promise<Track[]>`
+- `decode(track: string | string[]): Promise<Track | Track[]>`
+- `connect(url?: string, options?: WebSocket.ClientOptions): Promise<void>`
+- `voiceStateUpdate(packet: VoiceStateUpdate): Promise<boolean>`
+- `voiceServerUpdate(packet: VoiceServerUpdate): Promise<boolean>`
 
 ### Events
 

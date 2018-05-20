@@ -27,7 +27,7 @@ export default class Http {
     this.base = base;
   }
 
-  public load(identifier: string) {
+  public load(identifier: string): Promise<Track[]> {
     const url = new URL(this.input, this.base);
     url.pathname = '/loadtracks';
     url.search = `identifier=${identifier}`;
