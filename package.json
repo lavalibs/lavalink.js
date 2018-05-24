@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/appellation/lavalink.js#readme",
   "devDependencies": {
-    "@spectacles/gateway": "^0.8.4",
+    "@spectacles/gateway": "^0.10.0",
     "@types/ws": "^4.0.1",
     "del": "^3.0.0",
     "gulp": "^3.9.1",

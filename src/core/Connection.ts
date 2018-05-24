@@ -7,7 +7,7 @@ export default class Connection {
   public url: string;
   public options: WebSocket.ClientOptions;
 
-  public ws?: WebSocket;
+  public ws!: WebSocket;
 
   constructor(client: Client, url: string, options: WebSocket.ClientOptions = {}) {
     this.client = client;
@@ -17,9 +17,11 @@ export default class Connection {
     this.onClose = this.onClose.bind(this);
     this.onMessage = this.onMessage.bind(this);
     this.onError = this.onError.bind(this);
+
+    this.connect();
   }
 
-  public async connect() {
+  public connect() {
     const headers = {
       Authorization: this.client.password,
       'Num-Shards': 1,
@@ -31,8 +33,6 @@ export default class Connection {
     ws.once('close', this.onClose);
     ws.once('error', this.onError);
     ws.on('message', this.onMessage);
-
-    await new Promise(r => ws.once('open', r));
   }
 
   public onError(err?: any) {
@@ -48,7 +48,7 @@ export default class Connection {
     }
 
     await new Promise(r => setTimeout(r, 1e3 + Math.random() - 0.5));
-    await this.connect();
+    this.connect();
   }
 
   public onMessage(d: WebSocket.Data) {
@@ -67,14 +67,10 @@ export default class Connection {
 
   public send(d: any): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (this.ws) {
-        this.ws.send(JSON.stringify(d), (err) => {
-          if (err) reject(err);
-          else resolve();
-        });
-      } else {
-        reject(new Error('no WebSocket connection available'));
-      }
+      this.ws.send(JSON.stringify(d), (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
     });
   }
 }

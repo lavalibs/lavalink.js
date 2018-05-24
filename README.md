@@ -14,7 +14,7 @@ const voice = new class extends Client {
       userID: '', // the user ID of your bot
       hosts: {
         rest: '', // the http host of your lavalink instance (optional)
-        ws: '', // the ws host of your lavalink instance (optional)
+        ws: '', // the ws host of your lavalink instance (optional, but highly recommended)
       },
     });
   }
@@ -23,8 +23,6 @@ const voice = new class extends Client {
     // send this packet to the gateway
   }
 };
-
-voice.connect('ws://localhost:port'); // the websocket URL of your Lavalink app (optional if specified in options)
 ```
 
 You must extend the provided client with your own `send` method. You can do this by either modifying the client prototype or following the pattern above: either way, you must provide a method that sends packets to the gateway through the appropriate shard.
@@ -67,18 +65,17 @@ const player = voice.players.get('a guild id');
 ### `Client` reference
 
 - *abstract* `send(guildID: string, pk: any): Promise<void>`
-- `password: string`
-- `userID: string`
-- `connection?: Connection`
 - `players: PlayerStore`
-- `http?: Http`
-- `voiceStates: Map<string, string>`
-- `voiceServers: Map<string, VoiceServerUpdate>`
 - `load(identifier: string): Promise<Track[]>`
 - `decode(track: string | string[]): Promise<Track | Track[]>`
-- `connect(url?: string, options?: WebSocket.ClientOptions): Promise<void>`
 - `voiceStateUpdate(packet: VoiceStateUpdate): Promise<boolean>`
 - `voiceServerUpdate(packet: VoiceServerUpdate): Promise<boolean>`
+- `voiceStates: Map<string, string>`
+- `voiceServers: Map<string, VoiceServerUpdate>`
+- `connection?: Connection`
+- `http?: Http`
+- `password: string`
+- `userID: string`
 
 ### Events
 

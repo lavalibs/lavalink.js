@@ -3,51 +3,45 @@ const { inspect } = require('util');
 const { Client: Gateway } = require('@spectacles/gateway');
 
 const gateway = new Gateway(process.env.TOKEN);
-const client = new Client({
-  password: 'youshallnotpass',
-  shards: 1,
-  userID: process.env.USER_ID,
-});
+const client = new class extends Client {
+  constructor() {
+    super({
+      password: 'youshallnotpass',
+      userID: process.env.USER_ID,
+      hosts: {
+        rest: 'http://localhost:8081',
+        ws: 'http://localhost:8080',
+      },
+    });
+  }
+
+  send(guild, packet) {
+    return gateway.connections.get(0).send(packet);
+  }
+}
 
 gateway.on('READY', console.log);
 
-gateway.on('MESSAGE_CREATE', async m => {
-  if (m.content === 'join') {
-    await gateway.connections.get(0).send(4, {
-      guild_id: '281630801660215296',
-      channel_id: '281630801660215297',
-      self_mute: false,
-      self_deaf: true,
-    });
-  }
-
-  if (m.content === 'leave') {
-    await gateway.connections.get(0).send(4, {
-      guild_id: '281630801660215296',
-      channel_id: null,
-      self_mute: false,
-      self_deaf: true,
-    });
-  }
+gateway.on('MESSAGE_CREATE', async (shard, m) => {
+  console.log(m.content);
+  if (m.content === 'join') await client.players.get('281630801660215296').join('281630801660215297');
+  if (m.content === 'leave') await client.players.get('281630801660215296').leave();
 
   if (m.content === 'play') {
     const tracks = await client.load('https://www.twitch.tv/monstercat');
     client.players.get('281630801660215296').play(tracks[0].track);
   }
 
-  if (m.content === 'reconnect') {
-    gateway.connections.get(0).reconnect();
-  }
+  if (m.content === 'reconnect') gateway.connections.get(0).reconnect();
 });
 
-gateway.on('VOICE_STATE_UPDATE', s => client.voiceStateUpdate(s));
-gateway.on('VOICE_SERVER_UPDATE', s => client.voiceServerUpdate(s));
+gateway.on('VOICE_STATE_UPDATE', (shard, s) => client.voiceStateUpdate(s));
+gateway.on('VOICE_SERVER_UPDATE', (shard, s) => client.voiceServerUpdate(s));
 gateway.on('close', console.log);
 gateway.on('error', (shard, err) => console.log(inspect(err, { depth: 2 })));
 
 (async () => {
   try {
-    await client.connect('ws://localhost:8080');
     await gateway.spawn();
   } catch (e) {
     console.error(e);

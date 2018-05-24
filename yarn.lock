@@ -19,9 +19,9 @@
     normalize-path "^2.0.1"
     through2 "^2.0.3"
 
-"@spectacles/gateway@^0.8.4":
-  version "0.8.5"
-  resolved "https://registry.yarnpkg.com/@spectacles/gateway/-/gateway-0.8.5.tgz#0cd1282dfe7e5215a6c90fab949000ec8f38055a"
+"@spectacles/gateway@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@spectacles/gateway/-/gateway-0.10.0.tgz#cb34970dd2b44cf76b46fb7ab65366368e4c8917"
   dependencies:
     "@spectacles/util" "^0.2.0"
     p-throttle "^1.1.0"

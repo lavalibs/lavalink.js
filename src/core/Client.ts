@@ -28,7 +28,7 @@ export interface ClientOptions {
   userID: string;
   hosts?: {
     rest?: string;
-    ws?: string;
+    ws?: string | { url: string, options: WebSocket.ClientOptions };
   };
 }
 
@@ -54,7 +54,7 @@ export default abstract class Client extends EventEmitter {
 
     if (hosts) {
       if (hosts.rest) this.http = new Http(this, hosts.rest);
-      if (hosts.ws) this._wsHost = hosts.ws;
+      if (hosts.ws) this.connection = typeof hosts.ws === 'string' ? new Connection(this, hosts.ws) : new Connection(this, hosts.ws.url, hosts.ws.options);
     }
   }
 
@@ -68,17 +68,6 @@ export default abstract class Client extends EventEmitter {
   public decode(tracks: string | string[]): Promise<Track | Track[]> {
     if (this.http) return this.http.decode(tracks as any);
     throw new Error('no available http module');
-  }
-
-  public async connect(url?: string, options?: WebSocket.ClientOptions) {
-    if (!url) {
-      if (this._wsHost) url = this._wsHost;
-      else throw new Error('no WebSocket URL provided');
-    }
-
-    const conn = this.connection = new Connection(this, url);
-    await conn.connect();
-    return conn;
   }
 
   public voiceStateUpdate(packet: VoiceStateUpdate) {
