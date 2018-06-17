@@ -51,10 +51,6 @@
     "@types/bluebird" "*"
     "@types/node" "*"
 
-"@types/lodash@^4.14.109":
-  version "4.14.109"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.109.tgz#b1c4442239730bf35cabaf493c772b18c045886d"
-
 "@types/node@*":
   version "10.1.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.1.2.tgz#1b928a0baa408fc8ae3ac012cc81375addc147c6"
@@ -1346,10 +1342,6 @@ lodash.templatesettings@^3.0.0:
     lodash._reinterpolate "^3.0.0"
     lodash.escape "^3.0.0"
 
-lodash@^4.17.10:
-  version "4.17.10"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
-
 lodash@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-1.0.2.tgz#8f57560c83b59fc270bd3d561b690043430e2551"
@@ -1803,13 +1795,6 @@ regex-not@^1.0.0, regex-not@^1.0.2:
   dependencies:
     extend-shallow "^3.0.2"
     safe-regex "^1.1.0"
-
-rejects@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/rejects/-/rejects-0.5.1.tgz#7ef261dfa9383d64ea72759f4014dce28ce5073f"
-  dependencies:
-    "@types/lodash" "^4.14.109"
-    lodash "^4.17.10"
 
 remove-bom-buffer@^3.0.0:
   version "3.0.0"
