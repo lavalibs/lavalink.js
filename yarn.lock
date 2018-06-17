@@ -36,20 +36,9 @@
   optionalDependencies:
     erlpack "github:discordapp/erlpack"
 
-"@types/bluebird@*":
-  version "3.5.20"
-  resolved "https://registry.yarnpkg.com/@types/bluebird/-/bluebird-3.5.20.tgz#f6363172add6f4eabb8cada53ca9af2781e8d6a1"
-
 "@types/events@*":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
-
-"@types/ioredis@^3.2.8":
-  version "3.2.8"
-  resolved "https://registry.yarnpkg.com/@types/ioredis/-/ioredis-3.2.8.tgz#ea2dda6ee379efa5f8dabd477f04dce4bed91815"
-  dependencies:
-    "@types/bluebird" "*"
-    "@types/node" "*"
 
 "@types/node@*":
   version "10.1.2"

@@ -21,7 +21,6 @@
   "homepage": "https://github.com/appellation/lavalink.js#readme",
   "devDependencies": {
     "@spectacles/gateway": "^0.10.0",
-    "@types/ioredis": "^3.2.8",
     "@types/ws": "^5.1.2",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
