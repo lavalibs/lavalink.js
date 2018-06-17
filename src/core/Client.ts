@@ -45,8 +45,6 @@ export default abstract class Client extends EventEmitter {
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
-  protected _wsHost?: string;
-
   constructor({ password, userID, hosts }: ClientOptions) {
     super();
     this.password = password;

@@ -1,6 +1,5 @@
 import * as WebSocket from 'ws';
 import Client from './Client';
-import Player from './Player';
 
 export default class Connection {
   public readonly client: Client;

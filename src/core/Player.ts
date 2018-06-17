@@ -91,8 +91,14 @@ export default class Player extends EventEmitter {
     else this.status = Status.PLAYING;
   }
 
-  public stop() {
-    return this.send('stop');
+  public async stop() {
+    await this.send('stop');
+    this.status = Status.ENDED;
+  }
+
+  public async destroy() {
+    await this.send('destroy');
+    this.status = Status.ENDED;
   }
 
   public voiceUpdate(sessionId: string, event: VoiceServerUpdate) {

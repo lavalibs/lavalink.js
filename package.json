@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/appellation/lavalink.js.git"
   },
-  "author": "",
+  "author": "Will Nelson <nelson.will@live.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/appellation/lavalink.js/issues"
@@ -21,7 +21,8 @@
   "homepage": "https://github.com/appellation/lavalink.js#readme",
   "devDependencies": {
     "@spectacles/gateway": "^0.10.0",
-    "@types/ws": "^4.0.1",
+    "@types/ioredis": "^3.2.8",
+    "@types/ws": "^5.1.2",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.4",
@@ -29,6 +30,7 @@
     "typescript": "^2.7.2"
   },
   "dependencies": {
-    "ws": "^4.0.0"
+    "rejects": "^0.5.1",
+    "ws": "^5.2.0"
   }
 }

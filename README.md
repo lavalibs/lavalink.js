@@ -60,6 +60,7 @@ const player = voice.players.get('a guild id');
 - `seek(position: number): Promise<void>`
 - `pause(paused = true): Promise<void>`
 - `stop(): Promise<void>`
+- `destroy(): Promise<void>`
 - `join(channel: string, { deaf = false, mute = false }): Promise<void>`
 
 ### `Client` reference

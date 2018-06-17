@@ -27,8 +27,12 @@ export default class Http {
     this.base = base;
   }
 
+  public url() {
+    return new URL(this.input, this.base);
+  }
+
   public load(identifier: string): Promise<Track[]> {
-    const url = new URL(this.input, this.base);
+    const url = this.url();
     url.pathname = '/loadtracks';
     url.search = `identifier=${identifier}`;
 
@@ -38,7 +42,7 @@ export default class Http {
   public decode(track: string): Promise<Track>;
   public decode(tracks: string[]): Promise<Track[]>;
   public decode(tracks: string | string[]): Promise<Track | Track[]> {
-    const url = new URL(this.input, this.base);
+    const url = this.url();
     if (Array.isArray(tracks)) {
       url.pathname = '/decodetracks';
       return this._make('POST', url, Buffer.from(JSON.stringify(tracks)));
