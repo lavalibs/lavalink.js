@@ -15,7 +15,7 @@ const voice = new class extends Client {
       shardCount: 0, // the total number of shards that your bot is running (optional, useful if you're load balancing)
       hosts: {
         rest: '', // the http host of your lavalink instance (optional)
-        ws: '', // the ws host of your lavalink instance; this can also be an existing ws connection (optional)
+        ws: '', // the ws host of your lavalink instance (optional)
       },
     });
   }
