@@ -28,8 +28,8 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
   if (m.content === 'leave') await client.players.get('281630801660215296').leave();
 
   if (m.content === 'play') {
-    const tracks = await client.load('https://www.twitch.tv/monstercat');
-    client.players.get('281630801660215296').play(tracks[0].track);
+    const trackResponse = await client.load('https://www.twitch.tv/monstercat');
+    client.players.get('281630801660215296').play(trackResponse.tracks[0]);
   }
 
   if (m.content === 'reconnect') gateway.connections.get(0).reconnect();

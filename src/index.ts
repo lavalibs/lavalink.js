@@ -1,6 +1,6 @@
 import Client from './core/Client';
 import Connection from './core/Connection';
-import Http from './core/Http';
+import Http, { LoadType } from './core/Http';
 import Player, { Status } from './core/Player';
 
 export default Client;
@@ -10,4 +10,5 @@ export {
   Http,
   Player,
   Status,
+  LoadType
 }
