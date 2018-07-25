@@ -17,8 +17,8 @@ export interface TrackResponse {
 }
 
 export interface PlaylistInfo {
-  name: string,
-  selectedTrack: number
+  name?: string,
+  selectedTrack?: number
 }
 
 export interface Track {
