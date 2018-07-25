@@ -1,4 +1,5 @@
 import Client, { VoiceServerUpdate } from './Client';
+import { Track } from './Http';
 import { EventEmitter } from 'events';
 
 export enum Status {
@@ -66,7 +67,8 @@ export default class Player extends EventEmitter {
     })
   }
 
-  public async play(track: string, { start = 0, end = 0 }: { start?: number, end?: number } = {}) {
+  public async play(track: string | Track, { start = 0, end = 0 }: { start?: number, end?: number } = {}) {
+    if (typeof track !== 'string') track = track.track;
     await this.send('play', {
       track,
       startTime: start,
