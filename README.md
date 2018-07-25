@@ -67,8 +67,8 @@ const player = voice.players.get('a guild id');
 
 - *abstract* `send(guildID: string, pk: any): Promise<void>`
 - `players: PlayerStore`
-- `load(identifier: string): Promise<Track[]>`
-- `decode(track: string | string[]): Promise<Track | Track[]>`
+- `load(identifier: string): Promise<TrackResponse[]>`
+- `decode(track: string | string[]): Promise<TrackResponse | TrackResponse[]>`
 - `voiceStateUpdate(packet: VoiceStateUpdate): Promise<boolean>`
 - `voiceServerUpdate(packet: VoiceServerUpdate): Promise<boolean>`
 - `voiceStates: Map<string, string>`

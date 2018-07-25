@@ -2,6 +2,25 @@ import * as http from 'http';
 import { URL } from 'url';
 import Client from './Client';
 
+export enum LoadType {
+  TRACK_LOADED = 'TRACK_LOADED',
+  PLAYLIST_LOADED = 'PLAYLIST_LOADED',
+  SEARCH_RESULT = 'SEARCH_RESULT',
+  NO_MATCHES = 'NO_MATCHES',
+  LOAD_FAILED = 'LOAD_FAILED'
+}
+
+export interface TrackResponse {
+ loadType: LoadType,
+ playlistInfo: PlaylistInfo,
+ tracks: Track[]
+}
+
+export interface PlaylistInfo {
+  name?: string,
+  selectedTrack?: number
+}
+
 export interface Track {
   track: string;
   info: {
@@ -31,7 +50,7 @@ export default class Http {
     return new URL(this.input, this.base);
   }
 
-  public load(identifier: string): Promise<Track[]> {
+  public load(identifier: string): Promise<TrackResponse[]> {
     const url = this.url();
     url.pathname = '/loadtracks';
     url.search = `identifier=${identifier}`;
@@ -39,9 +58,9 @@ export default class Http {
     return this._make('GET', url);
   }
 
-  public decode(track: string): Promise<Track>;
-  public decode(tracks: string[]): Promise<Track[]>;
-  public decode(tracks: string | string[]): Promise<Track | Track[]> {
+  public decode(track: string): Promise<TrackResponse>;
+  public decode(tracks: string[]): Promise<TrackResponse[]>;
+  public decode(tracks: string | string[]): Promise<TrackResponse | TrackResponse[]> {
     const url = this.url();
     if (Array.isArray(tracks)) {
       url.pathname = '/decodetracks';
