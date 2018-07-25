@@ -25,6 +25,7 @@ export interface VoiceServerUpdate {
 export interface ClientOptions {
   password: string;
   userID: string;
+  shardCount?: number;
   hosts?: {
     rest?: string;
     ws?: string | { url: string, options: WebSocket.ClientOptions };
@@ -36,6 +37,7 @@ export default abstract class Client extends EventEmitter {
 
   public password: string;
   public userID: string;
+  public shardCount?: number;
 
   public connection?: Connection;
   public players: PlayerStore = new PlayerStore(this);
@@ -44,10 +46,11 @@ export default abstract class Client extends EventEmitter {
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
-  constructor({ password, userID, hosts }: ClientOptions) {
+  constructor({ password, userID, shardCount, hosts }: ClientOptions) {
     super();
     this.password = password;
     this.userID = userID;
+    this.shardCount = shardCount;
 
     if (hosts) {
       if (hosts.rest) this.http = new Http(this, hosts.rest);

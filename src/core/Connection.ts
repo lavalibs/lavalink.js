@@ -23,7 +23,7 @@ export default class Connection {
   public connect() {
     const headers = {
       Authorization: this.client.password,
-      'Num-Shards': 1,
+      'Num-Shards': this.client.shardCount || 1,
       'User-Id': this.client.userID,
     };
 
