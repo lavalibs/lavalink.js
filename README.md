@@ -1,6 +1,6 @@
 # Lavalink.js
 
-A Javascript wrapper for the Lavalink audio client for Discord. Only supports Lavalink v3; use 0.7.x for Lavalink v2.
+A Javascript wrapper for the Lavalink audio client for Discord. Only supports Lavalink v3; use 0.7.x for Lavalink v2. For a queue implementation, check out [lavaqueue](https://github.com/appellation/lavaqueue).
 
 ## Getting started
 
