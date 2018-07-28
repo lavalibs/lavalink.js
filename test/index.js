@@ -27,6 +27,12 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
   if (m.content === 'join') await client.players.get('281630801660215296').join('281630801660215297');
   if (m.content === 'leave') await client.players.get('281630801660215296').leave();
 
+  if (m.content === 'decode') {
+    const trackResponse = await client.load('https://www.youtube.com/playlist?list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67');
+    const decoded = await client.decode(trackResponse.tracks.map(t => t.track));
+    console.log(decoded.every((e, i) => typeof e === 'object'));
+  }
+
   if (m.content === 'play') {
     const trackResponse = await client.load('https://www.twitch.tv/monstercat');
     client.players.get('281630801660215296').play(trackResponse.tracks[0]);

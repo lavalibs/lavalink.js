@@ -1,12 +1,3 @@
-FROM openjdk:9-jre-slim
+FROM fredboat/lavalink:master-v3
 
-WORKDIR /usr/src/lavalink
-
-RUN apt-get update && apt-get upgrade -y && apt-get install -y wget
-
-RUN wget -O Lavalink.jar -q https://ci.fredboat.com/repository/download/Lavalink_Build/3697:id/Lavalink.jar?guest=1
-RUN apt-get remove -y wget && apt-get autoremove -y
-
-COPY application.yml .
-
-CMD ["java", "-jar", "Lavalink.jar"]
+COPY application.yml /opt/Lavalink/

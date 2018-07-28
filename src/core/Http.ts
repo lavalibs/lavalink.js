@@ -74,10 +74,18 @@ export default class Http {
 
   private async _make<T = any>(method: string, url: URL, data?: Buffer): Promise<T> {
     const message = await new Promise<http.IncomingMessage>((resolve) => {
-      const req = http.request(Object.assign(url, { method }), resolve);
-      req.setHeader('Authorization', this.client.password);
-      req.setHeader('Content-Type', 'application/json');
-      req.setHeader('Accept', 'application/json');
+      const req = http.request({
+        method,
+        hostname: url.hostname,
+        port: url.port,
+        protocol: url.protocol,
+        path: url.pathname + url.search,
+        headers: {
+          Authorization: this.client.password,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      }, resolve);
 
       if (data) req.write(data);
       req.end();
