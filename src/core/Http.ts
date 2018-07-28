@@ -58,9 +58,9 @@ export default class Http {
     return this._make('GET', url);
   }
 
-  public decode(track: string): Promise<TrackResponse>;
-  public decode(tracks: string[]): Promise<TrackResponse[]>;
-  public decode(tracks: string | string[]): Promise<TrackResponse | TrackResponse[]> {
+  public decode(track: string): Promise<Track>;
+  public decode(tracks: string[]): Promise<Track[]>;
+  public decode(tracks: string | string[]): Promise<Track | Track[]> {
     const url = this.url();
     if (Array.isArray(tracks)) {
       url.pathname = '/decodetracks';
