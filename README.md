@@ -1,5 +1,7 @@
 # Lavalink.js
 
+[![Lavalink.js support server](https://discordapp.com/api/guilds/251245211416657931/embed.png)](https://discord.gg/DPuaDvP)
+
 A Javascript wrapper for the [Lavalink](https://github.com/Frederikam/Lavalink) audio client for Discord. Only supports Lavalink v3; use 0.7.x for Lavalink v2. For a queue implementation, check out [lavaqueue](https://github.com/appellation/lavaqueue).
 
 ## Getting started
