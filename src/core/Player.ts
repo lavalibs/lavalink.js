@@ -57,15 +57,13 @@ export default class Player extends EventEmitter {
 
   public async moveTo(node: Node) {
     if (this.node === node) return;
+    if (!this.voiceServer || !this.voiceState) throw new Error('no voice state/server data to move');
 
-    if (this.voiceServer && this.voiceState) {
-      await this.destroy();
-
-      await Promise.all([
-        node.voiceStateUpdate(this.voiceState),
-        node.voiceServerUpdate(this.voiceServer),
-      ]);
-    }
+    await this.destroy();
+    await Promise.all([
+      node.voiceStateUpdate(this.voiceState),
+      node.voiceServerUpdate(this.voiceServer),
+    ]);
   }
 
   public leave() {
