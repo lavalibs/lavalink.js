@@ -1,5 +1,9 @@
-import Node, { NodeOptions } from './Node';
 import Cluster from './Cluster';
+import Node, { NodeOptions } from './Node';
+
+export interface ClusterNodeOptions extends NodeOptions {
+  tags?: Iterable<string>;
+}
 
 export interface Stats {
   players: number;
@@ -23,28 +27,13 @@ export interface Stats {
   };
 }
 
-export enum Region {
-  BRAZIL,
-  EU_CENTRAL,
-  EU_WEST,
-  HONGKONG,
-  JAPAN,
-  RUSSIA,
-  SINGAPORE,
-  SOUTH_AFRICA,
-  SYDNEY,
-  US_CENTRAL,
-  US_EAST,
-  US_SOUTH,
-  US_WEST,
-}
-
 export default class ClusterNode extends Node {
-  public regions: Region[] = [];
+  public tags: Set<string>;
   public stats?: Stats;
 
-  constructor(public readonly cluster: Cluster, options: NodeOptions) {
+  constructor(public readonly cluster: Cluster, options: ClusterNodeOptions) {
     super(options);
+    this.tags = new Set(options.tags || []);
     this.on('stats', stats => this.stats = stats);
   }
 

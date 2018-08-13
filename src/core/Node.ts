@@ -1,19 +1,19 @@
 import * as WebSocket from 'ws';
-import Connection from './Connection';
-import PlayerStore from './PlayerStore';
-import Http, { Track, TrackResponse } from './Http';
 import { EventEmitter } from 'events';
+import Connection from './Connection';
+import Http, { Track, TrackResponse } from './Http';
+import PlayerStore from './PlayerStore';
 
 export interface VoiceStateUpdate {
   guild_id: string;
-  channel_id: string;
+  channel_id?: string;
   user_id: string;
   session_id: string;
-  deaf: boolean;
-  mute: boolean;
-  self_deaf: boolean;
-  self_mute: boolean;
-  suppress: boolean;
+  deaf?: boolean;
+  mute?: boolean;
+  self_deaf?: boolean;
+  self_mute?: boolean;
+  suppress?: boolean;
 }
 
 export interface VoiceServerUpdate {

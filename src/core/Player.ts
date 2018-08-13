@@ -1,4 +1,4 @@
-import Node, { VoiceServerUpdate } from './Node';
+import Node, { VoiceServerUpdate, VoiceStateUpdate } from './Node';
 import { Track } from './Http';
 import { EventEmitter } from 'events';
 
@@ -32,12 +32,38 @@ export default class Player extends EventEmitter {
     });
   }
 
-  public get playing() {
+  public get playing(): boolean {
     return this.status === Status.PLAYING;
   }
 
-  public get paused() {
+  public get paused(): boolean {
     return this.status === Status.PAUSED;
+  }
+
+  public get voiceState(): VoiceStateUpdate | undefined {
+    const session = this.node.voiceStates.get(this.guildID);
+    if (!session) return;
+
+    return {
+      guild_id: this.guildID,
+      user_id: this.node.userID,
+      session_id: session,
+    };
+  }
+
+  public get voiceServer(): VoiceServerUpdate | undefined {
+    return this.node.voiceServers.get(this.guildID);
+  }
+
+  public async moveTo(node: Node) {
+    if (this.voiceServer && this.voiceState) {
+      await this.destroy();
+
+      await Promise.all([
+        node.voiceStateUpdate(this.voiceState),
+        node.voiceServerUpdate(this.voiceServer),
+      ]);
+    }
   }
 
   public leave() {
@@ -101,6 +127,7 @@ export default class Player extends EventEmitter {
   public async destroy() {
     await this.send('destroy');
     this.status = Status.ENDED;
+    this.node.players.delete(this.guildID);
   }
 
   public voiceUpdate(sessionId: string, event: VoiceServerUpdate) {
