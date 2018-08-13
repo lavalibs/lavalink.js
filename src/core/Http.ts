@@ -1,6 +1,21 @@
-import * as http from 'http';
+import { request, IncomingMessage, IncomingHttpHeaders } from 'http';
 import { URL } from 'url';
 import Node from './Node';
+
+export class HTTPError extends Error {
+  public statusCode: number;
+  public statusMessage: string;
+  public headers: IncomingHttpHeaders;
+  constructor(httpMessage: IncomingMessage) {
+    const message = `${httpMessage.statusCode} ${httpMessage.statusMessage}`;
+    super(message)
+    this.name = this.constructor.name;
+    this.message = message;
+    this.statusCode = httpMessage.statusCode as number;
+    this.statusMessage = httpMessage.statusMessage as string;
+    this.headers = httpMessage.headers;
+  }
+}
 
 export enum LoadType {
   TRACK_LOADED = 'TRACK_LOADED',
@@ -73,8 +88,8 @@ export default class Http {
   }
 
   private async _make<T = any>(method: string, url: URL, data?: Buffer): Promise<T> {
-    const message = await new Promise<http.IncomingMessage>((resolve) => {
-      const req = http.request({
+    const message = await new Promise<IncomingMessage>((resolve) => {
+      const req = request({
         method,
         hostname: url.hostname,
         port: url.port,
@@ -105,7 +120,7 @@ export default class Http {
         });
       });
     } else {
-      return Promise.reject(message);
+      return Promise.reject(new HTTPError(message));
     }
   }
 }
