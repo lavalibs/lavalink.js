@@ -56,6 +56,8 @@ export default class Player extends EventEmitter {
   }
 
   public async moveTo(node: Node) {
+    if (this.node === node) return;
+
     if (this.voiceServer && this.voiceState) {
       await this.destroy();
 
