@@ -23,7 +23,7 @@ export default abstract class Cluster extends EventEmitter {
       return node.connection && node.connection.ws.readyState === WebSocket.OPEN && (!tag || node.tags.has(tag));
     });
 
-    if (!nodes.length) throw new Error('no nodes available for the specified region');
+    if (!nodes.length) throw new Error('no nodes available for the specified tag');
     return nodes.sort((a, b) => { // sort by overall system cpu load
       if (!a.stats || !b.stats) return -1;
       return (a.stats.cpu ? a.stats.cpu.systemLoad / a.stats.cpu.cores : 0)
