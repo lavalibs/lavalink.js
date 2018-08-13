@@ -32,7 +32,7 @@ export interface ClientOptions {
   };
 }
 
-export default abstract class Client extends EventEmitter {
+export default abstract class Node extends EventEmitter {
   public abstract send(guild: string, pk: any): Promise<any>;
 
   public password: string;

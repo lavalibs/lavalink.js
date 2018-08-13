@@ -1,5 +1,5 @@
 import * as WebSocket from 'ws';
-import Client from './Client';
+import Node from './Node';
 
 interface Sendable {
   resolve: () => void;
@@ -8,7 +8,7 @@ interface Sendable {
 }
 
 export default class Connection {
-  public readonly client: Client;
+  public readonly node: Node;
   public url: string;
   public options: WebSocket.ClientOptions;
 
@@ -17,8 +17,8 @@ export default class Connection {
 
   private _queue: Array<Sendable> = [];
 
-  constructor(client: Client, url: string, options: WebSocket.ClientOptions = {}) {
-    this.client = client;
+  constructor(client: Node, url: string, options: WebSocket.ClientOptions = {}) {
+    this.node = client;
     this.url = url;
     this.options = options;
 
@@ -33,9 +33,9 @@ export default class Connection {
 
   public connect() {
     const headers = {
-      Authorization: this.client.password,
-      'Num-Shards': this.client.shardCount || 1,
-      'User-Id': this.client.userID,
+      Authorization: this.node.password,
+      'Num-Shards': this.node.shardCount || 1,
+      'User-Id': this.node.userID,
     };
 
     const ws = this.ws = new WebSocket(this.url, Object.assign({ headers }, this.options));
@@ -52,7 +52,7 @@ export default class Connection {
   }
 
   public onError(err?: any) {
-    this.client.emit('error', err);
+    this.node.emit('error', err);
     this.onClose();
   }
 
@@ -78,8 +78,8 @@ export default class Connection {
 
     const pk: any = JSON.parse(buf.toString());
 
-    if (pk.guildId) this.client.players.get(pk.guildId).emit(pk.op, pk);
-    this.client.emit(pk.op, pk);
+    if (pk.guildId) this.node.players.get(pk.guildId).emit(pk.op, pk);
+    this.node.emit(pk.op, pk);
   }
 
   public send(d: object): Promise<void> {

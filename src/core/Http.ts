@@ -1,6 +1,6 @@
 import * as http from 'http';
 import { URL } from 'url';
-import Client from './Client';
+import Node from './Node';
 
 export enum LoadType {
   TRACK_LOADED = 'TRACK_LOADED',
@@ -36,12 +36,12 @@ export interface Track {
 }
 
 export default class Http {
-  public readonly client: Client;
+  public readonly node: Node;
   public input: string;
   public base?: string;
 
-  constructor(client: Client, input: string, base?: string) {
-    this.client = client;
+  constructor(node: Node, input: string, base?: string) {
+    this.node = node;
     this.input = input;
     this.base = base;
   }
@@ -81,7 +81,7 @@ export default class Http {
         protocol: url.protocol,
         path: url.pathname + url.search,
         headers: {
-          Authorization: this.client.password,
+          Authorization: this.node.password,
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },

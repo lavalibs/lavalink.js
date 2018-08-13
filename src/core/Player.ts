@@ -1,4 +1,4 @@
-import Client, { VoiceServerUpdate } from './Client';
+import Node, { VoiceServerUpdate } from './Node';
 import { Track } from './Http';
 import { EventEmitter } from 'events';
 
@@ -12,13 +12,13 @@ export enum Status {
 }
 
 export default class Player extends EventEmitter {
-  public readonly client: Client;
+  public readonly node: Node;
   public guildID: string;
   public status: Status = Status.INSTANTIATED;
 
-  constructor(client: Client, guildID: string) {
+  constructor(node: Node, guildID: string) {
     super();
-    this.client = client;
+    this.node = node;
     this.guildID = guildID;
 
     this.on('event', (d) => {
@@ -41,7 +41,7 @@ export default class Player extends EventEmitter {
   }
 
   public leave() {
-    return this.client.send(this.guildID, {
+    return this.node.send(this.guildID, {
       op: 4,
       d: {
         guild_id: this.guildID,
@@ -53,10 +53,10 @@ export default class Player extends EventEmitter {
   }
 
   public join(channel: string, { deaf = false, mute = false } = {}) {
-    this.client.voiceServers.delete(this.guildID);
-    this.client.voiceStates.delete(this.guildID);
+    this.node.voiceServers.delete(this.guildID);
+    this.node.voiceStates.delete(this.guildID);
 
-    return this.client.send(this.guildID, {
+    return this.node.send(this.guildID, {
       op: 4,
       d: {
         guild_id: this.guildID,
@@ -111,7 +111,7 @@ export default class Player extends EventEmitter {
   }
 
   public send(op: string, d: any = {}) {
-    const conn = this.client.connection;
+    const conn = this.node.connection;
     if (conn) {
       return conn.send(Object.assign({
         op,
