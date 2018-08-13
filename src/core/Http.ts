@@ -119,8 +119,8 @@ export default class Http {
           resolve(JSON.parse(data.toString()));
         });
       });
-    } else {
-      return Promise.reject(new HTTPError(message));
     }
+
+    throw new HTTPError(message);
   }
 }
