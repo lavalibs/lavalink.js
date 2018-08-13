@@ -53,7 +53,7 @@ export default class Connection {
 
   public onError(err?: any) {
     this.node.emit('error', err);
-    this.onClose();
+    if (this.ws.readyState !== WebSocket.OPEN) this.onClose();
   }
 
   public async onClose() {

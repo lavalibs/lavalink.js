@@ -22,7 +22,7 @@ export interface VoiceServerUpdate {
   endpoint: string;
 }
 
-export interface ClientOptions {
+export interface NodeOptions {
   password: string;
   userID: string;
   shardCount?: number;
@@ -46,7 +46,7 @@ export default abstract class Node extends EventEmitter {
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
-  constructor({ password, userID, shardCount, hosts }: ClientOptions) {
+  constructor({ password, userID, shardCount, hosts }: NodeOptions) {
     super();
     this.password = password;
     this.userID = userID;
