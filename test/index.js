@@ -1,9 +1,9 @@
-const { Client } = require('../dist');
+const { Node } = require('../dist');
 const { inspect } = require('util');
 const { Client: Gateway } = require('@spectacles/gateway');
 
 const gateway = new Gateway(process.env.TOKEN);
-const client = new class extends Client {
+const client = new class extends Node {
   constructor() {
     super({
       password: 'youshallnotpass',

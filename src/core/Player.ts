@@ -136,7 +136,7 @@ export default class Player extends EventEmitter {
     });
   }
 
-  public send(op: string, d: any = {}) {
+  public send(op: string, d: object = {}) {
     const conn = this.node.connection;
     if (conn) {
       return conn.send(Object.assign({

@@ -30,10 +30,11 @@ export interface NodeOptions {
     rest?: string;
     ws?: string | { url: string, options: WebSocket.ClientOptions };
   };
+  send: (guild: string, pk: any) => Promise<any>;
 }
 
-export default abstract class Node extends EventEmitter {
-  public abstract send(guild: string, pk: any): Promise<any>;
+export default class Node extends EventEmitter {
+  public send: (guild: string, pk: any) => Promise<any>;
 
   public password: string;
   public userID: string;
@@ -46,11 +47,12 @@ export default abstract class Node extends EventEmitter {
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
-  constructor({ password, userID, shardCount, hosts }: NodeOptions) {
+  constructor({ password, userID, shardCount, hosts, send }: NodeOptions) {
     super();
     this.password = password;
     this.userID = userID;
     this.shardCount = shardCount;
+    this.send = send;
 
     if (hosts) {
       if (hosts.rest) this.http = new Http(this, hosts.rest);
