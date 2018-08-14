@@ -1,6 +1,21 @@
-import * as http from 'http';
+import { request, IncomingMessage, IncomingHttpHeaders } from 'http';
 import { URL } from 'url';
-import Client from './Client';
+import Node from './Node';
+
+export class HTTPError extends Error {
+  public statusCode: number;
+  public statusMessage: string;
+  public headers: IncomingHttpHeaders;
+  constructor(httpMessage: IncomingMessage) {
+    const message = `${httpMessage.statusCode} ${httpMessage.statusMessage}`;
+    super(message)
+    this.name = this.constructor.name;
+    this.message = message;
+    this.statusCode = httpMessage.statusCode as number;
+    this.statusMessage = httpMessage.statusMessage as string;
+    this.headers = httpMessage.headers;
+  }
+}
 
 export enum LoadType {
   TRACK_LOADED = 'TRACK_LOADED',
@@ -36,12 +51,12 @@ export interface Track {
 }
 
 export default class Http {
-  public readonly client: Client;
+  public readonly node: Node;
   public input: string;
   public base?: string;
 
-  constructor(client: Client, input: string, base?: string) {
-    this.client = client;
+  constructor(node: Node, input: string, base?: string) {
+    this.node = node;
     this.input = input;
     this.base = base;
   }
@@ -73,15 +88,15 @@ export default class Http {
   }
 
   private async _make<T = any>(method: string, url: URL, data?: Buffer): Promise<T> {
-    const message = await new Promise<http.IncomingMessage>((resolve) => {
-      const req = http.request({
+    const message = await new Promise<IncomingMessage>((resolve) => {
+      const req = request({
         method,
         hostname: url.hostname,
         port: url.port,
         protocol: url.protocol,
         path: url.pathname + url.search,
         headers: {
-          Authorization: this.client.password,
+          Authorization: this.node.password,
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
@@ -104,8 +119,8 @@ export default class Http {
           resolve(JSON.parse(data.toString()));
         });
       });
-    } else {
-      return Promise.reject(message);
     }
+
+    throw new HTTPError(message);
   }
 }

@@ -1,14 +1,20 @@
-import Client from './core/Client';
+import Node from './core/Node';
+import Cluster from './core/Cluster';
+import ClusterNode, { ClusterNodeOptions } from './core/ClusterNode';
 import Connection from './core/Connection';
-import Http, { LoadType } from './core/Http';
+import Http, { LoadType, HTTPError } from './core/Http';
 import Player, { Status } from './core/Player';
 
-export default Client;
+export default Node;
 export {
-  Client,
+  Node,
+  Cluster,
+  ClusterNodeOptions,
+  ClusterNode,
   Connection,
   Http,
   Player,
   Status,
-  LoadType
+  LoadType,
+  HTTPError
 }

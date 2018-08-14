@@ -1,19 +1,19 @@
 import * as WebSocket from 'ws';
-import Connection from './Connection';
-import PlayerStore from './PlayerStore';
-import Http, { Track, TrackResponse } from './Http';
 import { EventEmitter } from 'events';
+import Connection from './Connection';
+import Http, { Track, TrackResponse } from './Http';
+import PlayerStore from './PlayerStore';
 
 export interface VoiceStateUpdate {
   guild_id: string;
-  channel_id: string;
+  channel_id?: string;
   user_id: string;
   session_id: string;
-  deaf: boolean;
-  mute: boolean;
-  self_deaf: boolean;
-  self_mute: boolean;
-  suppress: boolean;
+  deaf?: boolean;
+  mute?: boolean;
+  self_deaf?: boolean;
+  self_mute?: boolean;
+  suppress?: boolean;
 }
 
 export interface VoiceServerUpdate {
@@ -22,7 +22,7 @@ export interface VoiceServerUpdate {
   endpoint: string;
 }
 
-export interface ClientOptions {
+export interface NodeOptions {
   password: string;
   userID: string;
   shardCount?: number;
@@ -30,10 +30,11 @@ export interface ClientOptions {
     rest?: string;
     ws?: string | { url: string, options: WebSocket.ClientOptions };
   };
+  send: (guild: string, pk: object) => Promise<any>;
 }
 
-export default abstract class Client extends EventEmitter {
-  public abstract send(guild: string, pk: any): Promise<any>;
+export default class Node extends EventEmitter {
+  public send: (guild: string, pk: object) => Promise<any>;
 
   public password: string;
   public userID: string;
@@ -46,11 +47,12 @@ export default abstract class Client extends EventEmitter {
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
-  constructor({ password, userID, shardCount, hosts }: ClientOptions) {
+  constructor({ password, userID, shardCount, hosts, send }: NodeOptions) {
     super();
     this.password = password;
     this.userID = userID;
     this.shardCount = shardCount;
+    this.send = send;
 
     if (hosts) {
       if (hosts.rest) this.http = new Http(this, hosts.rest);

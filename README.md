@@ -7,33 +7,22 @@ A Javascript wrapper for the [Lavalink](https://github.com/Frederikam/Lavalink) 
 ## Getting started
 
 ```js
-const { Client } = require('lavalink');
+const { Node } = require('lavalink');
 
-const voice = new class extends Client {
-  constructor() {
-    super({
-      password: '', // your Lavalink password
-      userID: '', // the user ID of your bot
-      shardCount: 0, // the total number of shards that your bot is running (optional, useful if you're load balancing)
-      hosts: {
-        rest: '', // the http host of your lavalink instance (optional)
-        ws: '', // the ws host of your lavalink instance (optional)
-      },
-    });
-  }
-
+const voice = new Node({
+  password: '', // your Lavalink password
+  userID: '', // the user ID of your bot
+  shardCount: 0, // the total number of shards that your bot is running (optional, useful if you're load balancing)
+  hosts: {
+    rest: '', // the http host of your lavalink instance (optional)
+    ws: '', // the ws host of your lavalink instance (optional)
+  },
   send(guildID, packet) {
     // send this packet to the gateway
-  }
-};
-```
-
-You must extend the provided client with your own `send` method. You can do this by either modifying the client prototype or following the pattern above: either way, you must provide a method that sends packets to the gateway through the appropriate shard. You are responsible for properly encoding the packet for transmission.
-
-```js
-Client.prototype.send = function(guildID, packet) {
-  gateway.connections.get(Long.fromString(guildID).shiftRight(22).mod(this.shardCount)).send(packet);
-};
+    // you are responsible for properly serializing and encoding the packet for transmission
+    return gateway.connections.get(Long.fromString(guildID).shiftRight(22).mod(this.shardCount)).send(packet);
+  },
+});
 ```
 
 You must also forward pre-decoded `VOICE_STATE_UPDATE` and `VOICE_SERVER_UPDATE` packets to the library by calling the `voiceStateUpdate` and `voiceServerUpdate` methods respectively.
@@ -88,13 +77,56 @@ voice.on('event', (d) => {
 });
 ```
 
+## Clustering
+
+```js
+const { Cluster } = require('lavalink');
+
+const cluster = new Cluster({
+  nodes: [
+    // node options here; see above
+  ],
+  send(guildID, packet) {
+    // send to gateway; same as for single node usage
+  },
+  filter(node, guildID) { // optional
+    // return a boolean indicating whether the given guild can be run on the given node
+    // useful for limiting guilds to specific nodes (for instance, if you setup lavalink edge servers to minimize latency)
+    // this must return true at least once for a given set of nodes, otherwise some methods may error
+  },
+});
+```
+
+When using a cluster, you can use the `Cluster#voiceStateUpdate` and `Cluster#voiceServerUpdate` methods to forward voice events (rather than those on `Node`), which will automatically route packets to the correct node.
+
+Clusters have a `nodes` property which is an array of all connected nodes. See above documentation for details about how to use them. Clusters have a number of properties to make load balancing more convenient. For example, to get an array of nodes sorted by CPU load:
+
+```js
+const recommendedNodes = cluster.sort();
+```
+
+Additionally, nodes created as part of a cluster support a `tags: Set<string>` property, which can then be used in the above-mentioned `filter` method to easily separate guilds into specific nodes.
+
+Clusters also have a shortcut method to avoid lengthy searches of all connected nodes for a specific player. `Cluster#get(guildID: string)` will return a player for a specified guild; if no player currently exists, it will create the player on the top recommended node.
+
+```js
+const player = cluster.get(guildID);
+```
+
+Players can be moved to a new node by calling the `Player#moveTo(node: Node)` method. Note that this will stop the player and *not* restart it; you must restart the player manually.
+
 ## Reference
 
 ### `Player`
 
-- *readonly* `client: Client`
+- *readonly* `node: Node`
 - `guildID: string`
 - `status: Status`
+- *readonly* `playing: boolean`
+- *readonly* `paused: boolean`
+- *readonly* `voiceState: VoiceStateUpdate | undefined` - a partially reconstructed voice state update packet for this player
+- *readonly* `voiceServer: VoiceServerUpdate | undefined` - the latest voice server update packet for this player
+- `moveTo(node: Node): Promise<void>` - destroy the player and forward voice state to the specified node. *Warning:* will reject if no voice state data is available. The player must be manually restarted once it has moved.
 - `play(track: string | Track, { start?: number, end?: number } = {}): Promise<void>`
 - `setVolume(volume: number): Promise<void>`
 - `seek(position: number): Promise<void>`
@@ -114,10 +146,12 @@ enum Status {
 }
 ```
 
-### `Client`
+### `Node`
 
-- *abstract* `send(guildID: string, pk: any): Promise<void>`
+- `send(guildID: string, pk: object): Promise<void>`
 - `players: PlayerStore`
+- `voiceStates: Map<string, string>` - guild ID mapped to session ID
+- `voiceServers: Map<string, VoiceServerUpdate>`
 - `load(identifier: string): Promise<TrackResponse[]>`
 - `decode(track: string | string[]): Promise<TrackResponse | TrackResponse[]>`
 - `voiceStateUpdate(packet: VoiceStateUpdate): Promise<boolean>`
@@ -128,8 +162,59 @@ enum Status {
 - `http?: Http`
 - `password: string`
 - `userID: string`
+- `shardCount?: number`
 
 ```ts
+interface VoiceStateUpdate {
+  guild_id: string;
+  channel_id?: string;
+  user_id: string;
+  session_id: string;
+  deaf?: boolean;
+  mute?: boolean;
+  self_deaf?: boolean;
+  self_mute?: boolean;
+  suppress?: boolean;
+}
+
+interface VoiceServerUpdate {
+  guild_id: string;
+  token: string;
+  endpoint: string;
+}
+
+interface NodeOptions {
+  password: string;
+  userID: string;
+  shardCount?: number;
+  hosts?: {
+    rest?: string;
+    ws?: string | { url: string, options: WebSocket.ClientOptions };
+  };
+  send: (guild: string, pk: any) => Promise<any>;
+}
+```
+
+### Http
+
+- **`constructor(node: Node, input: string, base?: string)`**
+- *readonly* `node: Node`
+- `input: string` - passed to Node.js URL constructor
+- `base?: string` - passed to Node.js URL constructor
+- `url(): URL`
+- `load(identifier: string): Promise<TrackResponse[]>`
+- `decode(track: string): Promise<Track>`
+- `decode(tracks: string[]): Promise<Track[]>`
+
+```ts
+enum LoadType {
+  TRACK_LOADED = 'TRACK_LOADED',
+  PLAYLIST_LOADED = 'PLAYLIST_LOADED',
+  SEARCH_RESULT = 'SEARCH_RESULT',
+  NO_MATCHES = 'NO_MATCHES',
+  LOAD_FAILED = 'LOAD_FAILED'
+}
+
 interface TrackResponse {
   loadType: LoadType,
   playlistInfo: PlaylistInfo,
@@ -162,28 +247,79 @@ interface Track {
 }
 ```
 
+### `Cluster`
+
+- **`constructor(options: ClusterOptions)`**
+- *readonly* `nodes: ClusterNode[]`
+- `send(guildID: string, pk: object): Promise<any>`
+- `filter(node: ClusterNode, guildID: string): boolean`
+- `spawn(options: ClusterNodeOptions): ClusterNode`
+- `spawn(options: ClusterNodeOptions[]): ClusterNode[]`
+- `sort(): ClusterNode[]` - does *not* sort in place
+- `has(guildID: string): boolean`
+- `get(guildID: string): Player`
+- `voiceStateUpdate(state: VoiceStateUpdate): Promise<boolean>`
+- `voiceServerUpdate(server: VoiceServerUpdate): Promise<boolean>`
+
+```ts
+interface ClusterOptions {
+  send: (guildID: string, pk: object) => Promise<any>;
+  filter?: (node: ClusterNode, guildID: string) => boolean;
+  nodes?: ClusterNodeOptions;
+}
+```
+
+### `ClusterNode extends Node`
+
+- **`constructor(cluster: Cluster, options: ClusterNodeOptions)`**
+- `tags: Set<string>`
+- `stats?: Stats`
+
+```ts
+interface Stats {
+  players: number;
+  playingPlayers: number;
+  uptime: number;
+  memory?: {
+    free: number;
+    used: number;
+    allocated: number;
+    reservable: number;
+  };
+  cpu?: {
+    cores: number;
+    systemLoad: number;
+    lavalinkLoad: number;
+  };
+  frameStats?: {
+    sent: number;
+    nulled: number;
+    deficit: number;
+  };
+}
+
+interface ClusterNodeOptions extends NodeOptions {
+  tags?: Iterable<string>;
+}
+```
+
 ## Discord.js example
 
 ```js
 const { Client } = require('discord.js');
-const { Client: Lavalink } = require('lavalink');
+const { Node } = require('lavalink');
 
 const client = new Client();
-const voice = new class extends Lavalink {
-  constructor() {
-    super({
-      // stuff here; see above
-    });
-
-    client.on('raw', pk => {
-      if (pk.t === 'VOICE_STATE_UPDATE') this.voiceStateUpdate(pk.d);
-      if (pk.t === 'VOICE_SERVER_UPDATE') this.voiceServerUpdate(pk.d);
-    });
-  }
-
+const voice = new Node({
+  // options here
   send(guildID, packet) {
     if (client.guilds.has(guildID)) return client.ws.send(packet);
     throw new Error('attempted to send a packet on the wrong shard');
   }
-};
+});
+
+client.on('raw', pk => {
+  if (pk.t === 'VOICE_STATE_UPDATE') voice.voiceStateUpdate(pk.d);
+  if (pk.t === 'VOICE_SERVER_UPDATE') voice.voiceServerUpdate(pk.d);
+});
 ```

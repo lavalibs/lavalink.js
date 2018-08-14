@@ -1,24 +1,26 @@
-const { Client } = require('../dist');
+const { Node } = require('../dist');
 const { inspect } = require('util');
 const { Client: Gateway } = require('@spectacles/gateway');
 
 const gateway = new Gateway(process.env.TOKEN);
-const client = new class extends Client {
+const client = new class extends Node {
   constructor() {
     super({
       password: 'youshallnotpass',
       userID: process.env.USER_ID,
       hosts: {
         rest: 'http://localhost:8081',
-        ws: 'http://localhost:8080',
+        ws: 'ws://localhost:8080',
       },
     });
+
+    this.on('error', () => null);
   }
 
   send(guild, packet) {
     return gateway.connections.get(0).send(packet);
   }
-}
+};
 
 gateway.on('READY', console.log);
 
@@ -26,6 +28,7 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
   console.log(m.content);
   if (m.content === 'join') await client.players.get('281630801660215296').join('281630801660215297');
   if (m.content === 'leave') await client.players.get('281630801660215296').leave();
+  if (m.content === 'pause') await client.players.get('281630801660215296').pause();
 
   if (m.content === 'decode') {
     const trackResponse = await client.load('https://www.youtube.com/playlist?list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67');
@@ -34,11 +37,12 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
   }
 
   if (m.content === 'play') {
-    const trackResponse = await client.load('https://www.twitch.tv/monstercat');
+    const trackResponse = await client.load('https://www.youtube.com/playlist?list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67');
     client.players.get('281630801660215296').play(trackResponse.tracks[0]);
   }
 
   if (m.content === 'reconnect') gateway.connections.get(0).reconnect();
+  console.log('finished');
 });
 
 gateway.on('VOICE_STATE_UPDATE', (shard, s) => client.voiceStateUpdate(s));
