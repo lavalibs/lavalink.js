@@ -10,7 +10,7 @@ export interface ClusterOptions {
 }
 
 export default class Cluster extends EventEmitter {
-  public send: (guild: string, pk: any) => Promise<any>;
+  public send: (guildID: string, pk: object) => Promise<any>;
   public filter: (node: ClusterNode, guildID: string) => boolean;
   public readonly nodes: ClusterNode[] = [];
 

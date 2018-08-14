@@ -30,11 +30,11 @@ export interface NodeOptions {
     rest?: string;
     ws?: string | { url: string, options: WebSocket.ClientOptions };
   };
-  send: (guild: string, pk: any) => Promise<any>;
+  send: (guild: string, pk: object) => Promise<any>;
 }
 
 export default class Node extends EventEmitter {
-  public send: (guild: string, pk: any) => Promise<any>;
+  public send: (guild: string, pk: object) => Promise<any>;
 
   public password: string;
   public userID: string;
