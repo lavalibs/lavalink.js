@@ -33,7 +33,7 @@ export default class Cluster extends EventEmitter {
 
   public sort(): ClusterNode[] {
     // filter nodes for open ws connections and restrict to specified tag (if provided)
-    return this.nodes.sort((a, b) => { // sort by overall system cpu load
+    return this.nodes.slice().sort((a, b) => { // sort by overall system cpu load
       if (!a.stats || !b.stats) return -1;
       return (a.stats.cpu ? a.stats.cpu.systemLoad / a.stats.cpu.cores : 0)
         - (b.stats.cpu ? b.stats.cpu.systemLoad / b.stats.cpu.cores : 0);
