@@ -4,16 +4,18 @@ import Node from './Node';
 
 export class HTTPError extends Error {
   public readonly statusMessage!: string;
+  public method: string;
   public statusCode: number;
   public headers: IncomingHttpHeaders;
   public path: string;
-  constructor(httpMessage: IncomingMessage, url: URL) {
+  constructor(httpMessage: IncomingMessage, method: string, url: URL) {
     super(`${httpMessage.statusCode} ${STATUS_CODES[httpMessage.statusCode as number]}`)
     Object.defineProperty(this, 'statusMessage', { enumerable: true, get: function () { return STATUS_CODES[httpMessage.statusCode as number]} })
     this.statusCode = httpMessage.statusCode as number;
     this.headers = httpMessage.headers;
     this.name = this.constructor.name;
     this.path = url.toString();
+    this.method = method;
   }
 }
 
@@ -121,6 +123,6 @@ export default class Http {
       });
     }
 
-    throw new HTTPError(message, url);
+    throw new HTTPError(message, method, url);
   }
 }
