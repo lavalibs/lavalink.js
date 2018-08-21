@@ -1,19 +1,21 @@
-import { request, IncomingMessage, IncomingHttpHeaders } from 'http';
+import { request, IncomingMessage, IncomingHttpHeaders, STATUS_CODES } from 'http';
 import { URL } from 'url';
 import Node from './Node';
 
 export class HTTPError extends Error {
+  public readonly statusMessage!: string;
+  public method: string;
   public statusCode: number;
-  public statusMessage: string;
   public headers: IncomingHttpHeaders;
-  constructor(httpMessage: IncomingMessage) {
-    const message = `${httpMessage.statusCode} ${httpMessage.statusMessage}`;
-    super(message)
-    this.name = this.constructor.name;
-    this.message = message;
+  public path: string;
+  constructor(httpMessage: IncomingMessage, method: string, url: URL) {
+    super(`${httpMessage.statusCode} ${STATUS_CODES[httpMessage.statusCode as number]}`)
+    Object.defineProperty(this, 'statusMessage', { enumerable: true, get: function () { return STATUS_CODES[httpMessage.statusCode as number]} })
     this.statusCode = httpMessage.statusCode as number;
-    this.statusMessage = httpMessage.statusMessage as string;
     this.headers = httpMessage.headers;
+    this.name = this.constructor.name;
+    this.path = url.toString();
+    this.method = method;
   }
 }
 
@@ -114,13 +116,13 @@ export default class Http {
       });
 
       return new Promise<T>(resolve => {
-        message.on('end', () => {
+        message.once('end', () => {
           const data = Buffer.concat(chunks);
           resolve(JSON.parse(data.toString()));
         });
       });
     }
 
-    throw new HTTPError(message);
+    throw new HTTPError(message, method, url);
   }
 }
