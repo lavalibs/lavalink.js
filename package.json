@@ -14,7 +14,8 @@
     "type": "git",
     "url": "git+https://github.com/appellation/lavalink.js.git"
   },
-  "maintainers": ["Will Nelson <nelson.will@live.com>", "DevYukine <devyukine@gmx.de>"],
+  "author": "Will Nelson <nelson.will@live.com>",
+  "maintainers": ["DevYukine <devyukine@gmx.de>"],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/appellation/lavalink.js/issues"
