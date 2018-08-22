@@ -48,7 +48,7 @@ Use the provided `Player#join(channelID)` method to join voice channels.
 await player.join('channel id');
 ```
 
-Load a track and then pass it to the `Player#play` method to play something.
+Load a track and then pass it to the `Player#play` method to play something, **note that this Library doesn't uri encode the input**.
 
 ```js
 const res = await voice.load('ytsearch:monstercat');
