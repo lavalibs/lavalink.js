@@ -25,7 +25,7 @@ export default class Player extends EventEmitter {
       if (d.type === 'TrackEndEvent') {
         if (d.reason !== 'REPLACED') this.status = Status.ENDED;
       } else if (d.type === 'TrackExceptionEvent') {
-        this.status = Status.ERRORED
+        this.status = Status.ERRORED;
       } else {
         this.status = Status.STUCK;
       }
