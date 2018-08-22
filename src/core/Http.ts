@@ -70,7 +70,7 @@ export default class Http {
   public load(identifier: string): Promise<TrackResponse[]> {
     const url = this.url();
     url.pathname = '/loadtracks';
-    url.search = `identifier=${encodeURIComponent(identifier)}`;
+    url.search = `identifier=${identifier}`;
 
     return this._make('GET', url);
   }
