@@ -3,24 +3,17 @@ const { inspect } = require('util');
 const { Client: Gateway } = require('@spectacles/gateway');
 
 const gateway = new Gateway(process.env.TOKEN);
-const client = new class extends Node {
-  constructor() {
-    super({
-      password: 'youshallnotpass',
-      userID: process.env.USER_ID,
-      hosts: {
-        rest: 'http://localhost:8081',
-        ws: 'ws://localhost:8080',
-      },
-    });
-
-    this.on('error', () => null);
-  }
-
+const client = new Node({
+  password: 'youshallnotpass',
+  userID: process.env.USER_ID,
+  hosts: {
+    rest: 'http://localhost:8081',
+    ws: 'ws://localhost:8080',
+  },
   send(guild, packet) {
     return gateway.connections.get(0).send(packet);
-  }
-};
+  },
+});
 
 gateway.on('READY', console.log);
 
@@ -40,6 +33,8 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
     const trackResponse = await client.load('https://www.youtube.com/playlist?list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67');
     client.players.get('281630801660215296').play(trackResponse.tracks[0]);
   }
+
+  if (m.content.startsWith('eval')) console.log(eval(m.content.slice(4).trim()));
 
   if (m.content === 'reconnect') gateway.connections.get(0).reconnect();
   console.log('finished');
