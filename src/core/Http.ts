@@ -115,10 +115,17 @@ export default class Http {
         chunks.push(chunk);
       });
 
-      return new Promise<T>(resolve => {
+      return new Promise<T>((resolve, reject) => {
+        message.once('error', reject);
         message.once('end', () => {
-          const data = Buffer.concat(chunks);
-          resolve(JSON.parse(data.toString()));
+          message.removeAllListeners();
+
+          try {
+            const data = Buffer.concat(chunks);
+            resolve(JSON.parse(data.toString()));
+          } catch (e) {
+            reject(e);
+          }
         });
       });
     }
