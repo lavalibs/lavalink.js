@@ -38,7 +38,8 @@ export default class ClusterNode extends Node {
   }
 
   public emit(name: string | symbol, ...args: any[]): boolean {
-    return super.emit(name, ...args) && this.cluster.emit(name, ...args);
+    if (this.listenerCount(name)) super.emit(name, ...args);
+    return this.cluster.emit(name, ...args);
   }
 
   public send = (guildID: string, pk: object): Promise<any> => {
