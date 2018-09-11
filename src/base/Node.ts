@@ -1,8 +1,8 @@
-import * as WebSocket from 'ws';
+import WebSocket = require('ws');
 import { EventEmitter } from 'events';
-import Connection from './Connection';
-import Http, { Track, TrackResponse } from './Http';
-import PlayerStore from './PlayerStore';
+import Connection from '../core/Connection';
+import Http, { Track, TrackResponse } from '../core/Http';
+import PlayerStore from '../core/PlayerStore';
 
 export interface VoiceStateUpdate {
   guild_id: string;
@@ -22,7 +22,7 @@ export interface VoiceServerUpdate {
   endpoint: string;
 }
 
-export interface NodeOptions {
+export interface BaseNodeOptions {
   password: string;
   userID: string;
   shardCount?: number;
@@ -30,11 +30,10 @@ export interface NodeOptions {
     rest?: string;
     ws?: string | { url: string, options: WebSocket.ClientOptions };
   };
-  send: (guild: string, pk: object) => Promise<any>;
 }
 
-export default class Node extends EventEmitter {
-  public send: (guild: string, pk: object) => Promise<any>;
+export default abstract class BaseNode extends EventEmitter {
+  public abstract send(guildID: string, packet: any): Promise<any>;
 
   public password: string;
   public userID: string;
@@ -47,12 +46,11 @@ export default class Node extends EventEmitter {
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
-  constructor({ password, userID, shardCount, hosts, send }: NodeOptions) {
+  constructor({ password, userID, shardCount, hosts }: BaseNodeOptions) {
     super();
     this.password = password;
     this.userID = userID;
     this.shardCount = shardCount;
-    this.send = send;
 
     if (hosts) {
       if (hosts.rest) this.http = new Http(this, hosts.rest);

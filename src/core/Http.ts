@@ -1,6 +1,6 @@
 import { request, IncomingMessage, IncomingHttpHeaders, STATUS_CODES } from 'http';
 import { URL } from 'url';
-import Node from './Node';
+import Node from '../base/Node';
 
 export class HTTPError extends Error {
   public readonly statusMessage!: string;

@@ -1,5 +1,5 @@
 import * as WebSocket from 'ws';
-import Node from './Node';
+import Node from '../base/Node';
 
 interface Sendable {
   resolve: () => void;
@@ -54,21 +54,23 @@ export default class Connection {
   }
 
   public connect() {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) this.ws.close();
+
     const headers = {
       Authorization: this.node.password,
       'Num-Shards': this.node.shardCount || 1,
       'User-Id': this.node.userID,
     };
 
-    const ws = this.ws = new WebSocket(this.url, Object.assign({ headers }, this.options));
+    this.ws = new WebSocket(this.url, Object.assign({ headers }, this.options));
     this._registerWSEventListeners();
   }
 
   public send(d: object): Promise<void> {
-    const encoded = JSON.stringify(d);
-
     return new Promise((resolve, reject) => {
+      const encoded = JSON.stringify(d);
       const send = { resolve, reject, data: encoded };
+
       if (this.ws.readyState === WebSocket.OPEN) this._send(send);
       else this._queue.push(send);
     });

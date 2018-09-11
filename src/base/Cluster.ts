@@ -1,24 +1,17 @@
 import { EventEmitter } from 'events';
-import ClusterNode, { ClusterNodeOptions } from './ClusterNode';
-import Player from './Player';
+import ClusterNode, { ClusterNodeOptions } from '../ClusterNode';
+import Player from '../core/Player';
 import { VoiceStateUpdate, VoiceServerUpdate } from './Node';
 
-export interface ClusterOptions {
-  send: (guildID: string, pk: object) => Promise<any>;
-  filter?: (node: ClusterNode, guildID: string) => boolean;
-  nodes?: ClusterNodeOptions;
-}
+export default abstract class Cluster extends EventEmitter {
+  public abstract send(guildID: string, packet: any): Promise<any>;
+  public abstract filter: (node: ClusterNode, guildID: string) => boolean;
 
-export default class Cluster extends EventEmitter {
-  public send: (guildID: string, pk: object) => Promise<any>;
-  public filter: (node: ClusterNode, guildID: string) => boolean;
   public readonly nodes: ClusterNode[] = [];
 
-  constructor(options: ClusterOptions) {
+  constructor(options?: ClusterNodeOptions[]) {
     super();
-    this.send = options.send;
-    this.filter = options.filter || (() => true);
-    if (options.nodes) this.spawn(options.nodes);
+    if (options) this.spawn(options);
   }
 
   public spawn(options: ClusterNodeOptions): ClusterNode;

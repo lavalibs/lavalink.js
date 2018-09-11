@@ -1,5 +1,5 @@
 import Player from './Player';
-import Node from './Node';
+import Node from '../base/Node';
 
 export default class PlayerStore extends Map<string, Player> {
   public readonly node: Node;

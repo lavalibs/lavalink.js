@@ -1,7 +1,7 @@
-import Cluster from './Cluster';
-import Node, { NodeOptions } from './Node';
+import Cluster from './base/Cluster';
+import BaseNode, { BaseNodeOptions } from './base/Node';
 
-export interface ClusterNodeOptions extends NodeOptions {
+export interface ClusterNodeOptions extends BaseNodeOptions {
   tags?: Iterable<string>;
 }
 
@@ -27,7 +27,7 @@ export interface Stats {
   };
 }
 
-export default class ClusterNode extends Node {
+export default class ClusterNode extends BaseNode {
   public tags: Set<string>;
   public stats?: Stats;
 
@@ -42,7 +42,7 @@ export default class ClusterNode extends Node {
     return this.cluster.emit(name, ...args);
   }
 
-  public send = (guildID: string, pk: object): Promise<any> => {
+  public send(guildID: string, pk: object): Promise<any> {
     return this.cluster.send(guildID, pk);
   }
 }

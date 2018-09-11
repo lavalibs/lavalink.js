@@ -1,4 +1,4 @@
-import Node, { VoiceServerUpdate, VoiceStateUpdate } from './Node';
+import Node, { VoiceServerUpdate, VoiceStateUpdate } from '../base/Node';
 import { Track } from './Http';
 import { EventEmitter } from 'events';
 
