@@ -70,7 +70,7 @@ export default class Http {
   public load(identifier: string): Promise<TrackResponse[]> {
     const url = this.url();
     url.pathname = '/loadtracks';
-    url.search = `identifier=${identifier}`;
+    url.searchParams.append('identifier', identifier);
 
     return this._make('GET', url);
   }
@@ -84,7 +84,7 @@ export default class Http {
       return this._make('POST', url, Buffer.from(JSON.stringify(tracks)));
     } else {
       url.pathname = '/decodetrack';
-      url.search = `track=${tracks}`;
+      url.searchParams.append('track', tracks);
       return this._make('GET', url);
     }
   }
