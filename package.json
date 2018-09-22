@@ -15,7 +15,9 @@
     "url": "git+https://github.com/appellation/lavalink.js.git"
   },
   "author": "Will Nelson <nelson.will@live.com>",
-  "maintainers": ["DevYukine <devyukine@gmx.de>"],
+  "maintainers": [
+    "DevYukine <devyukine@gmx.de>"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/appellation/lavalink.js/issues"
@@ -25,10 +27,11 @@
     "@spectacles/gateway": "^0.10.0",
     "@types/ws": "^6.0.0",
     "del": "^3.0.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-typescript": "^4.0.1",
-    "typescript": "^2.7.2"
+    "merge2": "^1.2.2",
+    "typescript": "^3.0.3"
   },
   "dependencies": {
     "ws": "^6.0.0"
