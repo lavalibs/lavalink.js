@@ -77,6 +77,7 @@ export default class Http {
 
   public decode(track: string): Promise<Track>;
   public decode(tracks: string[]): Promise<Track[]>;
+  public decode(tracks: string | string[]): Promise<Track | Track[]>;
   public decode(tracks: string | string[]): Promise<Track | Track[]> {
     const url = this.url();
     if (Array.isArray(tracks)) {

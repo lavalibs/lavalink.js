@@ -66,7 +66,7 @@ export default abstract class BaseNode extends EventEmitter {
   public decode(track: string): Promise<Track>;
   public decode(tracks: string[]): Promise<Track[]>;
   public decode(tracks: string | string[]): Promise<Track | Track[]> {
-    if (this.http) return this.http.decode(tracks as any);
+    if (this.http) return this.http.decode(tracks);
     throw new Error('no available http module');
   }
 
