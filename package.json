@@ -12,17 +12,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/appellation/lavalink.js.git"
+    "url": "git+https://github.com/lavalibs/lavalink.js.git"
   },
-  "author": "Will Nelson <nelson.will@live.com>",
+  "author": "Will Nelson <will@pleb.xyz>",
   "maintainers": [
     "DevYukine <devyukine@gmx.de>"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/appellation/lavalink.js/issues"
+    "url": "https://github.com/lavalibs/lavalink.js/issues"
   },
-  "homepage": "https://github.com/appellation/lavalink.js#readme",
+  "homepage": "https://github.com/lavalibs/lavalink.js#readme",
   "devDependencies": {
     "@spectacles/gateway": "^0.10.0",
     "@types/ws": "^6.0.0",
