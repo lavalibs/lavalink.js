@@ -3,9 +3,9 @@ import ClusterNode, { ClusterNodeOptions } from '../ClusterNode';
 import Player from '../core/Player';
 import { VoiceStateUpdate, VoiceServerUpdate } from './Node';
 
-export default abstract class Cluster extends EventEmitter {
+export default abstract class BaseCluster extends EventEmitter {
   public abstract send(guildID: string, packet: any): Promise<any>;
-  public abstract filter: (node: ClusterNode, guildID: string) => boolean;
+  public abstract filter(node: ClusterNode, guildID: string): boolean;
 
   public readonly nodes: ClusterNode[] = [];
 
