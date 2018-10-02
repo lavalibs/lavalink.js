@@ -38,7 +38,6 @@ export default class Connection {
     },
     error: (err: any) => {
       this.node.emit('error', err);
-      if (this.ws.readyState !== WebSocket.OPEN) this._listeners.close();
     },
   };
 
