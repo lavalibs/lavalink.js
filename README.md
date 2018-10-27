@@ -117,6 +117,8 @@ Players can be moved to a new node by calling the `Player#moveTo(node: Node)` me
 
 ## Reference
 
+See the [Lavalink reference](https://github.com/Frederikam/Lavalink/blob/master/IMPLEMENTATION.md) for details.
+
 ### `Player`
 
 - *readonly* `node: Node`
@@ -129,6 +131,7 @@ Players can be moved to a new node by calling the `Player#moveTo(node: Node)` me
 - `moveTo(node: Node): Promise<void>` - destroy the player and forward voice state to the specified node. *Warning:* will reject if no voice state data is available. The player must be manually restarted once it has moved.
 - `play(track: string | Track, { start?: number, end?: number } = {}): Promise<void>`
 - `setVolume(volume: number): Promise<void>`
+- `setEqualizer(bands: Array<{ band: number, gain: number}>): Promise<void>`
 - `seek(position: number): Promise<void>`
 - `pause(paused = true): Promise<void>`
 - `stop(): Promise<void>`
