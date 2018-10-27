@@ -107,6 +107,10 @@ export default class Player extends EventEmitter {
     return this.send('volume', { volume: vol });
   }
 
+  public setEqualizer(bands: Array<{ band: number, gain: number }>) {
+    return this.send('equalizer', { bands });
+  }
+
   public seek(position: number) {
     return this.send('seek', { position });
   }
