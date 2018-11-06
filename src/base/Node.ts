@@ -58,7 +58,7 @@ export default abstract class BaseNode extends EventEmitter {
     }
   }
 
-  public load(identifier: string): Promise<TrackResponse[]> {
+  public load(identifier: string): Promise<TrackResponse> {
     if (this.http) return this.http.load(identifier);
     throw new Error('no available http module');
   }

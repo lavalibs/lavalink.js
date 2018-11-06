@@ -67,7 +67,7 @@ export default class Http {
     return new URL(this.input, this.base);
   }
 
-  public load(identifier: string): Promise<TrackResponse[]> {
+  public load(identifier: string): Promise<TrackResponse> {
     const url = this.url();
     url.pathname = '/loadtracks';
     url.searchParams.append('identifier', identifier);
