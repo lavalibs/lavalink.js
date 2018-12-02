@@ -74,7 +74,7 @@ export default abstract class BaseNode extends EventEmitter {
     if (packet.user_id !== this.userID) return Promise.resolve(false);
 
     this.voiceStates.set(packet.guild_id, packet.session_id);
-    return Promise.resolve(false);
+    return this._tryConnection(packet.guild_id);
   }
 
   public voiceServerUpdate(packet: VoiceServerUpdate) {
@@ -88,6 +88,7 @@ export default abstract class BaseNode extends EventEmitter {
     if (!state || !server) return false;
 
     await this.players.get(guildID).voiceUpdate(state, server);
+    this.voiceServers.delete(guildID);
     return true;
   }
 }
