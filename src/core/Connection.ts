@@ -7,10 +7,18 @@ interface Sendable {
   data: Buffer | string;
 }
 
+interface Headers {
+  Authorization: string;
+  'Num-Shards': number;
+  'User-Id': string;
+  'Resume-Key'?: string;
+}
+
 export default class Connection {
   public readonly node: Node;
   public url: string;
   public options: WebSocket.ClientOptions;
+  public resumeKey?: string;
 
   public ws!: WebSocket;
   public reconnectTimeout = 500;
@@ -18,7 +26,9 @@ export default class Connection {
   private _listeners = {
     open: () => {
       this.reconnectTimeout = 500;
-      this._flush();
+      this._flush()
+        .then(() => this.configureResuming())
+        .catch(e => this.node.emit('error', e));
     },
     close: async () => {
       await new Promise(r => setTimeout(r, this.reconnectTimeout *= 2));
@@ -55,14 +65,25 @@ export default class Connection {
   public connect() {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) this.ws.close();
 
-    const headers = {
+    const headers: Headers = {
       Authorization: this.node.password,
       'Num-Shards': this.node.shardCount || 1,
       'User-Id': this.node.userID,
     };
 
+    if (this.resumeKey) headers['Resume-Key'] = this.resumeKey;
     this.ws = new WebSocket(this.url, Object.assign({ headers }, this.options));
     this._registerWSEventListeners();
+  }
+
+  public configureResuming(timeout: number = 60, key: string = Math.random().toString(36)): Promise<void> {
+    this.resumeKey = key;
+
+    return this.send({
+      op: 'configureResuming',
+      key,
+      timeout,
+    });
   }
 
   public send(d: object): Promise<void> {
