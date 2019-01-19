@@ -155,7 +155,7 @@ enum Status {
 - `players: PlayerStore`
 - `voiceStates: Map<string, string>` - guild ID mapped to session ID
 - `voiceServers: Map<string, VoiceServerUpdate>`
-- `load(identifier: string): Promise<TrackResponse[]>`
+- `load(identifier: string): Promise<TrackResponse>`
 - `decode(track: string | string[]): Promise<TrackResponse | TrackResponse[]>`
 - `voiceStateUpdate(packet: VoiceStateUpdate): Promise<boolean>`
 - `voiceServerUpdate(packet: VoiceServerUpdate): Promise<boolean>`

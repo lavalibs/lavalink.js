@@ -88,6 +88,7 @@ export default abstract class BaseNode extends EventEmitter {
     if (!state || !server) return false;
 
     await this.players.get(guildID).voiceUpdate(state, server);
+    this.voiceServers.delete(guildID);
     return true;
   }
 }
