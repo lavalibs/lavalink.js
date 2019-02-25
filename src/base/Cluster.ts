@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import ClusterNode, { ClusterNodeOptions } from '../ClusterNode';
 import Player from '../core/Player';
 import { VoiceStateUpdate, VoiceServerUpdate } from './Node';
+import Node from '../Node';
 
 export default abstract class BaseCluster extends EventEmitter {
   public abstract send(guildID: string, packet: any): Promise<any>;
@@ -33,22 +34,26 @@ export default abstract class BaseCluster extends EventEmitter {
     });
   }
 
+  public getNode(guildID: string): Node {
+    let node = this.nodes.find(node => node.players.has(guildID));
+    if (!node) node = this.sort().find(node => this.filter(node, guildID));
+    if (node) return node;
+    throw new Error('unable to find appropriate node; please check your filter');
+  }
+
   public has(guildID: string): boolean {
     return this.nodes.some(node => node.players.has(guildID));
   }
 
   public get(guildID: string): Player {
-    let node = this.nodes.find(node => node.players.has(guildID));
-    if (!node) node = this.sort().find(node => this.filter(node, guildID));
-    if (node) return node.players.get(guildID);
-    throw new Error('unable to find appropriate node; please check your filter');
+    return this.getNode(guildID).players.get(guildID);
   }
 
   public voiceStateUpdate(state: VoiceStateUpdate): Promise<boolean> {
-    return this.get(state.guild_id).node.voiceStateUpdate(state);
+    return this.getNode(state.guild_id).voiceStateUpdate(state);
   }
 
   public voiceServerUpdate(server: VoiceServerUpdate): Promise<boolean> {
-    return this.get(server.guild_id).node.voiceServerUpdate(server);
+    return this.getNode(server.guild_id).voiceServerUpdate(server);
   }
 }

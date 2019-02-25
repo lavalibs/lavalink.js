@@ -259,6 +259,7 @@ interface Track {
 - `spawn(options: ClusterNodeOptions): ClusterNode`
 - `spawn(options: ClusterNodeOptions[]): ClusterNode[]`
 - `sort(): ClusterNode[]` - does *not* sort in place
+- `getNode(guildID: string): Node` - throws if the node doesn't already exist and the filter never returns true
 - `has(guildID: string): boolean`
 - `get(guildID: string): Player`
 - `voiceStateUpdate(state: VoiceStateUpdate): Promise<boolean>`
