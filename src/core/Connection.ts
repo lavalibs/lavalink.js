@@ -43,7 +43,7 @@ export default class Connection {
       else buf = d;
 
       const pk: any = JSON.parse(buf.toString());
-      if (pk.guildId) this.node.players.get(pk.guildId).emit(pk.op, pk);
+      if (pk.guildId && this.node.players.has(pk.guildId)) this.node.players.get(pk.guildId).emit(pk.op, pk);
       this.node.emit(pk.op, pk);
     },
     error: (err: any) => {
