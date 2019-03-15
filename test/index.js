@@ -45,6 +45,11 @@ gateway.on('VOICE_SERVER_UPDATE', (shard, s) => client.voiceServerUpdate(s));
 gateway.on('close', console.log);
 gateway.on('error', (shard, err) => console.log(inspect(err, { depth: 2 })));
 
+let i = 0;
+client.on('error', e => console.error(i++, e));
+client.on('open', () => console.log('ll open'));
+client.on('close', () => console.log('ll close'));
+
 (async () => {
   try {
     await gateway.spawn();

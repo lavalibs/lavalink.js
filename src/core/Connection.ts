@@ -1,4 +1,5 @@
 import * as WebSocket from 'ws';
+import backoff = require('backoff');
 import Node from '../base/Node';
 
 interface Sendable {
@@ -21,18 +22,20 @@ export default class Connection {
   public resumeKey?: string;
 
   public ws!: WebSocket;
-  public reconnectTimeout = 500;
+  public backoff: backoff.Backoff = backoff.exponential();
+  public reconnectTimeout: number = 100; // TODO: remove in next major version
 
   private _listeners = {
     open: () => {
-      this.reconnectTimeout = 500;
+      this.backoff.reset();
+      this.node.emit('open');
       this._flush()
         .then(() => this.configureResuming())
         .catch(e => this.node.emit('error', e));
     },
-    close: async () => {
-      await new Promise(r => setTimeout(r, this.reconnectTimeout *= 2));
-      this.connect();
+    close: (code: number, reason: string) => {
+      this.node.emit('close', code, reason);
+      this._reconnect();
     },
     message: (d: WebSocket.Data) => {
       let buf: Buffer | string;
@@ -48,6 +51,7 @@ export default class Connection {
     },
     error: (err: any) => {
       this.node.emit('error', err);
+      this._reconnect();
     },
   };
 
@@ -60,6 +64,9 @@ export default class Connection {
 
     this._send = this._send.bind(this);
     this.connect();
+
+    this.backoff.on('ready', () => this.connect());
+    this.backoff.on('backoff', (number, delay) => this.reconnectTimeout = delay);
   }
 
   public connect() {
@@ -94,6 +101,10 @@ export default class Connection {
       if (this.ws.readyState === WebSocket.OPEN) this._send(send);
       else this._queue.push(send);
     });
+  }
+
+  private async _reconnect() {
+    if (this.ws.readyState === WebSocket.CLOSED) this.backoff.backoff();
   }
 
   private _registerWSEventListeners() {
