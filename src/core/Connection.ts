@@ -1,6 +1,7 @@
 import * as WebSocket from 'ws';
 import backoff = require('backoff');
 import Node from '../base/Node';
+import { IncomingMessage } from 'http';
 
 interface Sendable {
   resolve: () => void;
@@ -37,6 +38,7 @@ export default class Connection {
       this.node.emit('close', code, reason);
       this._reconnect();
     },
+    upgrade: (req: IncomingMessage) => this.node.emit('upgrade', req),
     message: (d: WebSocket.Data) => {
       let buf: Buffer | string;
 
