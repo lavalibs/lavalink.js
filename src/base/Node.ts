@@ -60,7 +60,7 @@ export default abstract class BaseNode extends EventEmitter {
     }
   }
 
-  public connected(): boolean {
+  public get connected(): boolean {
     if (!this.connection) return false;
     return this.connection.ws.readyState === WebSocket.OPEN;
   }
