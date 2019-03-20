@@ -23,8 +23,9 @@ export default class Connection {
   public resumeKey?: string;
 
   public ws!: WebSocket;
-  public backoff: backoff.Backoff = backoff.exponential();
   public reconnectTimeout: number = 100; // TODO: remove in next major version
+
+  private _backoff!: backoff.Backoff;
 
   private _listeners = {
     open: () => {
@@ -64,11 +65,21 @@ export default class Connection {
     this.url = url;
     this.options = options;
 
+    this.backoff = backoff.exponential();
     this._send = this._send.bind(this);
     this.connect();
+  }
 
-    this.backoff.on('ready', () => this.connect());
-    this.backoff.on('backoff', (number, delay) => this.reconnectTimeout = delay);
+  public get backoff(): backoff.Backoff {
+    return this._backoff;
+  }
+
+  public set backoff(b: backoff.Backoff) {
+    b.on('ready', () => this.connect());
+    b.on('backoff', (number, delay) => this.reconnectTimeout = delay);
+
+    if (this._backoff) this._backoff.removeAllListeners();
+    this._backoff = b;
   }
 
   public connect() {
