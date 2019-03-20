@@ -75,7 +75,10 @@ export default class Connection {
   }
 
   public set backoff(b: backoff.Backoff) {
-    b.on('ready', () => this.connect());
+    b.on('ready', (number, delay) => {
+      this.reconnectTimeout = delay;
+      this.connect();
+    });
     b.on('backoff', (number, delay) => this.reconnectTimeout = delay);
 
     if (this._backoff) this._backoff.removeAllListeners();
