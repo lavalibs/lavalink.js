@@ -60,6 +60,11 @@ export default abstract class BaseNode extends EventEmitter {
     }
   }
 
+  public connected(): boolean {
+    if (!this.connection) return false;
+    return this.connection.ws.readyState === WebSocket.OPEN;
+  }
+
   public load(identifier: string): Promise<TrackResponse> {
     if (this.http) return this.http.load(identifier);
     throw new Error('no available http module');
