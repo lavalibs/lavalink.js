@@ -1,6 +1,9 @@
-const { Cluster } = require('../dist');
-const { inspect } = require('util');
-const { Client: Gateway } = require('@spectacles/gateway');
+import { Cluster } from '../src';
+import { inspect } from 'util';
+import { Client as Gateway } from '@spectacles/gateway';
+
+if (!process.env.TOKEN) throw new Error('token not provided');
+if (!process.env.USER_ID) throw new Error('user id not provided');
 
 const gateway = new Gateway(process.env.TOKEN);
 const cluster = new Cluster({
@@ -23,7 +26,9 @@ const cluster = new Cluster({
     },
   ],
   send(guildID, packet) {
-    return gateway.connections.get(0).send(packet);
+    const conn = gateway.connections.get(0);
+    if (conn) return conn.send(packet);
+    throw new Error('no gateway connection available');
   },
   filter(node, guildID) {
     // return node.tags.includes(client.guilds.get(guildID).region));
@@ -54,7 +59,10 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
     console.log(cluster.nodes.map(node => node.stats));
   }
 
-  if (m.content === 'reconnect') gateway.connections.get(0).reconnect();
+  if (m.content === 'reconnect') {
+    const conn = gateway.connections.get(0);
+    if (conn) conn.reconnect();
+  }
   console.log('finished');
 });
 
