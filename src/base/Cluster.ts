@@ -2,7 +2,6 @@ import { EventEmitter } from 'events';
 import ClusterNode, { ClusterNodeOptions } from '../ClusterNode';
 import Player from '../core/Player';
 import { VoiceStateUpdate, VoiceServerUpdate } from './Node';
-import Node from '../Node';
 
 export default abstract class BaseCluster extends EventEmitter {
   public abstract send(guildID: string, packet: any): any;
@@ -34,7 +33,7 @@ export default abstract class BaseCluster extends EventEmitter {
     });
   }
 
-  public getNode(guildID: string): Node {
+  public getNode(guildID: string): ClusterNode {
     let node = this.nodes.find(node => node.players.has(guildID));
     if (!node) node = this.sort().find(node => this.filter(node, guildID));
     if (node) return node;
