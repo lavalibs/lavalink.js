@@ -46,6 +46,8 @@ export default abstract class BaseNode extends EventEmitter {
   public voiceStates: Map<string, string> = new Map();
   public voiceServers: Map<string, VoiceServerUpdate> = new Map();
 
+  private _expectingConnection: Set<string> = new Set();
+
   constructor({ password, userID, shardCount, hosts }: BaseNodeOptions) {
     super();
     this.password = password;
@@ -79,16 +81,17 @@ export default abstract class BaseNode extends EventEmitter {
 
   public voiceServerUpdate(packet: VoiceServerUpdate) {
     this.voiceServers.set(packet.guild_id, packet);
+    this._expectingConnection.add(packet.guild_id);
     return this._tryConnection(packet.guild_id);
   }
 
   private async _tryConnection(guildID: string) {
     const state = this.voiceStates.get(guildID);
     const server = this.voiceServers.get(guildID);
-    if (!state || !server) return false;
+    if (!state || !server || !this._expectingConnection.has(guildID)) return false;
 
     await this.players.get(guildID).voiceUpdate(state, server);
-    this.voiceServers.delete(guildID);
+    this._expectingConnection.delete(guildID);
     return true;
   }
 }
