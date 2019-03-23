@@ -8,7 +8,15 @@ export enum Status {
   PAUSED,
   ENDED,
   ERRORED,
-  STUCK
+  STUCK,
+  UNKNOWN,
+}
+
+export enum EventType {
+  TRACK_END = 'TrackEndEvent',
+  TRACK_EXCEPTION = 'TrackExceptionEvent',
+  TRACK_STUCK = 'TrackStuckEvent',
+  WEBSOCKET_CLOSED = 'WebSocketClosedEvent',
 }
 
 export default class Player extends EventEmitter {
@@ -22,12 +30,22 @@ export default class Player extends EventEmitter {
     this.guildID = guildID;
 
     this.on('event', (d) => {
-      if (d.type === 'TrackEndEvent') {
-        if (d.reason !== 'REPLACED') this.status = Status.ENDED;
-      } else if (d.type === 'TrackExceptionEvent') {
-        this.status = Status.ERRORED;
-      } else {
-        this.status = Status.STUCK;
+      switch (d.type) {
+        case EventType.TRACK_END:
+          if (d.reason !== 'REPLACED') this.status = Status.ENDED;
+          break;
+        case EventType.TRACK_EXCEPTION:
+          this.status = Status.ERRORED;
+          break;
+        case EventType.TRACK_STUCK:
+          this.status = Status.STUCK;
+          break;
+        case EventType.WEBSOCKET_CLOSED:
+          this.status = Status.ENDED;
+          break;
+        default:
+          this.status = Status.UNKNOWN;
+          break;
       }
     });
   }
