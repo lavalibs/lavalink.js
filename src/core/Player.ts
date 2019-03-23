@@ -128,7 +128,7 @@ export default class Player extends EventEmitter {
   }
 
   public async destroy() {
-    await this.send('destroy');
+    if (this.node.connected) await this.send('destroy');
     this.status = Status.ENDED;
     this.node.players.delete(this.guildID);
   }
