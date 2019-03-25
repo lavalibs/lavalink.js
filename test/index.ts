@@ -11,7 +11,7 @@ const client = new Node({
   userID: process.env.USER_ID,
   hosts: {
     rest: 'http://localhost:8081',
-    ws: 'ws://localhost:8080',
+    ws: 'ws://localhost:8081',
   },
   send(guild, packet) {
     const conn = gateway.connections.get(0);
@@ -21,12 +21,15 @@ const client = new Node({
 });
 
 gateway.on('READY', console.log);
+client.on('event', console.log);
 
 gateway.on('MESSAGE_CREATE', async (shard, m) => {
   console.log(m.content);
-  if (m.content === 'join') await client.players.get('281630801660215296').join('281630801660215297');
-  if (m.content === 'leave') await client.players.get('281630801660215296').leave();
-  if (m.content === 'pause') await client.players.get('281630801660215296').pause();
+
+  const player = client.players.get('281630801660215296');
+  if (m.content === 'join') await player.join('281630801660215297');
+  if (m.content === 'leave') await player.leave();
+  if (m.content === 'pause') await player.pause();
 
   if (m.content === 'decode') {
     const trackResponse = await client.load('https://www.youtube.com/playlist?list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67');

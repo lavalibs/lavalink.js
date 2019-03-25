@@ -77,20 +77,27 @@ export default abstract class BaseNode extends EventEmitter {
     throw new Error('no available http module');
   }
 
-  public voiceStateUpdate(packet: VoiceStateUpdate) {
+  public voiceStateUpdate(packet: VoiceStateUpdate): Promise<boolean> {
     if (packet.user_id !== this.userID) return Promise.resolve(false);
 
-    this.voiceStates.set(packet.guild_id, packet.session_id);
-    return this._tryConnection(packet.guild_id);
+    if (packet.channel_id) {
+      this.voiceStates.set(packet.guild_id, packet.session_id);
+      return this._tryConnection(packet.guild_id);
+    } else {
+      this.voiceServers.delete(packet.guild_id);
+      this.voiceStates.delete(packet.guild_id);
+    }
+
+    return Promise.resolve(false);
   }
 
-  public voiceServerUpdate(packet: VoiceServerUpdate) {
+  public voiceServerUpdate(packet: VoiceServerUpdate): Promise<boolean> {
     this.voiceServers.set(packet.guild_id, packet);
     this._expectingConnection.add(packet.guild_id);
     return this._tryConnection(packet.guild_id);
   }
 
-  private async _tryConnection(guildID: string) {
+  private async _tryConnection(guildID: string): Promise<boolean> {
     const state = this.voiceStates.get(guildID);
     const server = this.voiceServers.get(guildID);
     if (!state || !server || !this._expectingConnection.has(guildID)) return false;

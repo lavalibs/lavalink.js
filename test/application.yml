@@ -4,9 +4,6 @@ server: # REST server
 lavalink:
   server:
     password: "youshallnotpass"
-    ws:
-      port: 8080
-      host: 0.0.0.0
     sources:
       youtube: true
       bandcamp: true
