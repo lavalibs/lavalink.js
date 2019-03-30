@@ -19,6 +19,22 @@ export enum EventType {
   WEBSOCKET_CLOSED = 'WebSocketClosedEvent',
 }
 
+export interface PlayerOptions {
+  start?: number;
+  end?: number;
+  noReplace?: boolean;
+}
+
+export interface EqualizerBand {
+  band: number;
+  gain: number;
+}
+
+export interface JoinOptions {
+  mute?: boolean;
+  deaf?: boolean;
+}
+
 export default class Player extends EventEmitter {
   public readonly node: Node;
   public guildID: string;
@@ -96,7 +112,7 @@ export default class Player extends EventEmitter {
     });
   }
 
-  public join(channel: string, { deaf = false, mute = false } = {}) {
+  public join(channel: string, { deaf = false, mute = false }: JoinOptions = {}) {
     this.node.voiceServers.delete(this.guildID);
     this.node.voiceStates.delete(this.guildID);
 
@@ -111,11 +127,12 @@ export default class Player extends EventEmitter {
     })
   }
 
-  public async play(track: string | Track, { start = 0, end = 0 }: { start?: number, end?: number } = {}) {
+  public async play(track: string | Track, { start = 0, end = 0, noReplace }: PlayerOptions = {}) {
     await this.send('play', {
       track: typeof track === 'object' ? track.track : track,
       startTime: start,
       endTime: end,
+      noReplace,
     });
 
     this.status = Status.PLAYING;
@@ -125,7 +142,7 @@ export default class Player extends EventEmitter {
     return this.send('volume', { volume: vol });
   }
 
-  public setEqualizer(bands: Array<{ band: number, gain: number }>) {
+  public setEqualizer(bands: EqualizerBand[]) {
     return this.send('equalizer', { bands });
   }
 
