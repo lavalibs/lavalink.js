@@ -115,6 +115,12 @@ const player = cluster.get(guildID);
 
 Players can be moved to a new node by calling the `Player#moveTo(node: Node)` method. Note that this will stop the player and *not* restart it; you must restart the player manually.
 
+## Caveats
+
+This library stores a minimum amount of state in memory that is required for it to be usable. This means that information such as node stats and player positions are not automatically tracked. In order to do so, you should listen to the event that provides the data and cache it yourself. See #15 for more information.
+
+Additionally, this library does not currently support external caches to avoid unnecessary drag on the event loop. If you have a legitimate use case for this, feel free to open a discussion.
+
 ## Reference
 
 See the [Lavalink reference](https://github.com/Frederikam/Lavalink/blob/master/IMPLEMENTATION.md) for details.
