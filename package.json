@@ -3,7 +3,7 @@
   "version": "2.6.0",
   "description": "A Lavalink client for JavaScript.",
   "main": "dist/src/index.js",
-  "types": "typings/index.d.ts",
+  "types": "typings/src/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "yarn prepare && env-cmd .env node --trace-warnings dist/test/index.js",
