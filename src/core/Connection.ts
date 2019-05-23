@@ -131,6 +131,7 @@ export default class Connection {
 
   private async _flush() {
     await Promise.all(this._queue.map(this._send));
+    this._queue = [];
   }
 
   private _send({ resolve, reject, data }: Sendable) {
