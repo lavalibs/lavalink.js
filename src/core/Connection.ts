@@ -119,7 +119,7 @@ export default class Connection {
     });
   }
 
-  private async _reconnect() {
+  private _reconnect() {
     if (this.ws.readyState === WebSocket.CLOSED) this.backoff.backoff();
   }
 
