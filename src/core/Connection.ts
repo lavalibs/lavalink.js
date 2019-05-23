@@ -41,14 +41,10 @@ export default class Connection {
     },
     upgrade: (req: IncomingMessage) => this.node.emit('upgrade', req),
     message: (d: WebSocket.Data) => {
-      let buf: Buffer | string;
+      if (Array.isArray(d)) d = Buffer.concat(d);
+      else if (d instanceof ArrayBuffer) d = Buffer.from(d);
 
-      if (Buffer.isBuffer(d)) buf = d;
-      else if (Array.isArray(d)) buf = Buffer.concat(d);
-      else if (d instanceof ArrayBuffer) buf = Buffer.from(d);
-      else buf = d;
-
-      const pk: any = JSON.parse(buf.toString());
+      const pk: any = JSON.parse(d.toString());
       if (pk.guildId && this.node.players.has(pk.guildId)) this.node.players.get(pk.guildId).emit(pk.op, pk);
       this.node.emit(pk.op, pk);
     },
