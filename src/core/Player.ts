@@ -101,18 +101,10 @@ export default class Player extends EventEmitter {
   }
 
   public leave() {
-    return this.node.send(this.guildID, {
-      op: 4,
-      d: {
-        guild_id: this.guildID,
-        channel_id: null,
-        self_mute: false,
-        self_deaf: false
-      },
-    });
+    return this.join(null);
   }
 
-  public join(channel: string, { deaf = false, mute = false }: JoinOptions = {}) {
+  public join(channel: string | null, { deaf = false, mute = false }: JoinOptions = {}) {
     this.node.voiceServers.delete(this.guildID);
     this.node.voiceStates.delete(this.guildID);
 
