@@ -30,6 +30,7 @@ export interface BaseNodeOptions {
     rest?: string;
     ws?: string | { url: string, options: WebSocket.ClientOptions };
   };
+  host?: string;
 }
 
 export default abstract class BaseNode extends EventEmitter {
@@ -48,13 +49,16 @@ export default abstract class BaseNode extends EventEmitter {
 
   private _expectingConnection: Set<string> = new Set();
 
-  constructor({ password, userID, shardCount, hosts }: BaseNodeOptions) {
+  constructor({ password, userID, shardCount, hosts, host }: BaseNodeOptions) {
     super();
     this.password = password;
     this.userID = userID;
     this.shardCount = shardCount;
 
-    if (hosts) {
+    if (host) {
+      this.http = new Http(this, host);
+      this.connection = new Connection(this, host);
+    } else if (hosts) {
       if (hosts.rest) this.http = new Http(this, hosts.rest);
       if (hosts.ws) this.connection = typeof hosts.ws === 'string' ? new Connection(this, hosts.ws) : new Connection(this, hosts.ws.url, hosts.ws.options);
     }
