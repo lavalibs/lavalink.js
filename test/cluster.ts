@@ -11,18 +11,12 @@ const cluster = new Cluster({
     {
       password: 'youshallnotpass',
       userID: process.env.USER_ID,
-      hosts: {
-        rest: 'http://localhost:8081',
-        ws: 'ws://localhost:8080',
-      },
+      host: 'localhost:8080',
     },
     {
       password: 'youshallnotpass',
       userID: process.env.USER_ID,
-      hosts: {
-        rest: 'http://localhost:8083',
-        ws: 'ws://localhost:8082',
-      },
+      host: 'localhost:8081',
     },
   ],
   send(guildID, packet) {
@@ -43,6 +37,7 @@ gateway.on('MESSAGE_CREATE', async (shard, m) => {
   if (m.content === 'join') await cluster.get('281630801660215296').join('281630801660215297');
   if (m.content === 'leave') await cluster.get('281630801660215296').leave();
   if (m.content === 'pause') await cluster.get('281630801660215296').pause();
+  if (m.content === 'destroy') await cluster.get('281630801660215296').destroy();
 
   if (m.content === 'decode') {
     const trackResponse = await cluster.get('281630801660215296').node.load('https://www.youtube.com/playlist?list=PLe8jmEHFkvsaDOOWcREvkgFoj6MD0pQ67');

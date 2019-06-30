@@ -56,8 +56,8 @@ export default abstract class BaseNode extends EventEmitter {
     this.shardCount = shardCount;
 
     if (host) {
-      this.http = new Http(this, host);
-      this.connection = new Connection(this, host);
+      this.http = new Http(this, `http://${host}`);
+      this.connection = new Connection(this, `ws://${host}`);
     } else if (hosts) {
       if (hosts.rest) this.http = new Http(this, hosts.rest);
       if (hosts.ws) this.connection = typeof hosts.ws === 'string' ? new Connection(this, hosts.ws) : new Connection(this, hosts.ws.url, hosts.ws.options);

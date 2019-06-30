@@ -1,3 +1,3 @@
-FROM fredboat/lavalink:master-v3
+FROM fredboat/lavalink:dev
 
 COPY application.yml /opt/Lavalink/
