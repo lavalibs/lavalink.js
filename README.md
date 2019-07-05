@@ -17,6 +17,7 @@ const voice = new Node({
     rest: '', // the http host of your lavalink instance (optional)
     ws: '', // the ws host of your lavalink instance (optional)
   },
+  host: '', // a URL to your lavalink instance without protocol (optional, can be used instead of specifying hosts option)
   send(guildID, packet) {
     // send this packet to the gateway
     // you are responsible for properly serializing and encoding the packet for transmission
@@ -48,7 +49,7 @@ Use the provided `Player#join(channelID)` method to join voice channels.
 await player.join('channel id');
 ```
 
-Load a track and then pass it to the `Player#play` method to play something, **note that this Library doesn't uri encode the input**.
+Load a track and then pass it to the `Player#play` method to play something.
 
 ```js
 const res = await voice.load('ytsearch:monstercat');
@@ -200,6 +201,7 @@ interface NodeOptions {
     rest?: string;
     ws?: string | { url: string, options: WebSocket.ClientOptions };
   };
+  host?: string;
   send: (guild: string, pk: any) => Promise<any>;
 }
 ```
