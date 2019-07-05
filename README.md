@@ -31,6 +31,9 @@ You must also forward pre-decoded `VOICE_STATE_UPDATE` and `VOICE_SERVER_UPDATE`
 ```js
 gateway.on('VOICE_STATE_UPDATE', (shard, state) => voice.voiceStateUpdate(state)); // forward voice state updates
 gateway.on('VOICE_SERVER_UPDATE', (shard, info) => voice.voiceServerUpdate(info)); // forward voice server updates
+gateway.on('GUILD_CREATE', (shard, guild) => {
+  for (const state of guild.voice_states) voice.voiceStateUpdate(state);
+});
 ```
 
 > All examples that use the `gateway` variable are based off of the [Spectacles Gateway](https://github.com/spec-tacles/gateway.js) API, but any gateway library can be used as long as you can send and receive raw data to/from the Discord API.
