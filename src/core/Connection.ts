@@ -49,7 +49,14 @@ export default class Connection {
       if (Array.isArray(d)) d = Buffer.concat(d);
       else if (d instanceof ArrayBuffer) d = Buffer.from(d);
 
-      const pk: any = JSON.parse(d.toString());
+      let pk: any;
+      try {
+        pk = JSON.parse(d.toString());
+      } catch (e) {
+        this.node.emit('error', e);
+        return;
+      }
+
       if (pk.guildId && this.node.players.has(pk.guildId)) this.node.players.get(pk.guildId).emit(pk.op, pk);
       this.node.emit(pk.op, pk);
     },
