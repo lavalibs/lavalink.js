@@ -5,7 +5,7 @@ import Cluster, { ClusterOptions } from './Cluster';
 import ClusterNode, { ClusterNodeOptions, Stats } from './ClusterNode';
 import Node, { NodeOptions } from './Node';
 
-import Connection from './core/Connection';
+import Connection, { Options as ConnectionOptions } from './core/Connection';
 import Http, { LoadType, TrackResponse, PlaylistInfo, Track, HTTPError } from './core/Http';
 import Player, { Status, PlayerOptions, EqualizerBand, JoinOptions } from './core/Player';
 
@@ -26,6 +26,7 @@ export {
   NodeOptions,
 
   Connection,
+  ConnectionOptions,
   Http,
   LoadType,
   TrackResponse,
