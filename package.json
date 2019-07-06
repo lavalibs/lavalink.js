@@ -1,6 +1,6 @@
 {
   "name": "lavalink",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "A Lavalink client for JavaScript.",
   "main": "dist/src/index.js",
   "types": "typings/src/index.d.ts",
