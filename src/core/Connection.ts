@@ -16,10 +16,15 @@ interface Headers {
   'Resume-Key'?: string;
 }
 
+export interface Options extends WebSocket.ClientOptions {
+  resumeKey?: string;
+  resumeTimeout?: number;
+}
+
 export default class Connection {
   public readonly node: Node;
   public url: string;
-  public options: WebSocket.ClientOptions;
+  public options: Options;
   public resumeKey?: string;
 
   public ws!: WebSocket;
@@ -32,7 +37,7 @@ export default class Connection {
       this.backoff.reset();
       this.node.emit('open');
       this._flush()
-        .then(() => this.configureResuming())
+        .then(() => this.configureResuming(this.options.resumeTimeout, this.options.resumeKey))
         .catch(e => this.node.emit('error', e));
     },
     close: (code: number, reason: string) => {
@@ -56,10 +61,11 @@ export default class Connection {
 
   private _queue: Array<Sendable> = [];
 
-  constructor(client: Node, url: string, options: WebSocket.ClientOptions = {}) {
+  constructor(client: Node, url: string, options: Options = {}) {
     this.node = client;
     this.url = url;
     this.options = options;
+    this.resumeKey = options.resumeKey;
 
     this.backoff = backoff.exponential();
     this._send = this._send.bind(this);
