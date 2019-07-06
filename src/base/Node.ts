@@ -1,6 +1,6 @@
 import WebSocket = require('ws');
 import { EventEmitter } from 'events';
-import Connection from '../core/Connection';
+import Connection, { Options as ConnectionOptions } from '../core/Connection';
 import Http, { Track, TrackResponse } from '../core/Http';
 import PlayerStore from '../core/PlayerStore';
 
@@ -28,7 +28,7 @@ export interface BaseNodeOptions {
   shardCount?: number;
   hosts?: {
     rest?: string;
-    ws?: string | { url: string, options: WebSocket.ClientOptions };
+    ws?: string | { url: string, options: ConnectionOptions };
   };
   host?: string;
 }
