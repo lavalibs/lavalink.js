@@ -21,8 +21,8 @@ export interface Options extends WebSocket.ClientOptions {
   resumeTimeout?: number;
 }
 
-export default class Connection {
-  public readonly node: Node;
+export default class Connection<T extends Node = Node> {
+  public readonly node: T;
   public url: string;
   public options: Options;
   public resumeKey?: string;
@@ -68,8 +68,8 @@ export default class Connection {
 
   private _queue: Array<Sendable> = [];
 
-  constructor(client: Node, url: string, options: Options = {}) {
-    this.node = client;
+  constructor(node: T, url: string, options: Options = {}) {
+    this.node = node;
     this.url = url;
     this.options = options;
     this.resumeKey = options.resumeKey;

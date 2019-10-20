@@ -41,7 +41,7 @@ export default abstract class BaseNode extends EventEmitter {
   public shardCount?: number;
 
   public connection?: Connection;
-  public players: PlayerStore = new PlayerStore(this);
+  public players: PlayerStore<this> = new PlayerStore(this);
   public http?: Http;
 
   public voiceStates: Map<string, string> = new Map();

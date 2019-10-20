@@ -35,12 +35,12 @@ export interface JoinOptions {
   deaf?: boolean;
 }
 
-export default class Player extends EventEmitter {
-  public readonly node: Node;
+export default class Player<T extends Node = Node> extends EventEmitter {
+  public readonly node: T;
   public guildID: string;
   public status: Status = Status.INSTANTIATED;
 
-  constructor(node: Node, guildID: string) {
+  constructor(node: T, guildID: string) {
     super();
     this.node = node;
     this.guildID = guildID;
