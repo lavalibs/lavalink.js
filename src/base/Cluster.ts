@@ -43,7 +43,7 @@ export default abstract class BaseCluster extends EventEmitter {
     return this.nodes.some(node => node.players.has(guildID));
   }
 
-  public get(guildID: string): Player {
+  public get(guildID: string): Player<ClusterNode> {
     return this.getNode(guildID).players.get(guildID);
   }
 
