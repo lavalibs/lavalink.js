@@ -89,7 +89,7 @@ export default class Player<T extends Node = Node> extends EventEmitter {
     return this.node.voiceServers.get(this.guildID);
   }
 
-  public async moveTo(node: Node) {
+  public async moveTo(node: T) {
     if (this.node === node) return;
     if (!this.voiceServer || !this.voiceState) throw new Error('no voice state/server data to move');
 
