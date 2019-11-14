@@ -101,6 +101,11 @@ export default abstract class BaseNode extends EventEmitter {
     return this._tryConnection(packet.guild_id);
   }
 
+  public async destroy(code?: number, data?: string): Promise<void> {
+    await Promise.all([...this.players.values()].map(player => player.destroy()));
+    if (this.connection) await this.connection.close(code, data);
+  }
+
   private async _tryConnection(guildID: string): Promise<boolean> {
     const state = this.voiceStates.get(guildID);
     const server = this.voiceServers.get(guildID);

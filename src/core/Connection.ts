@@ -128,6 +128,20 @@ export default class Connection<T extends Node = Node> {
     });
   }
 
+  public close(code?: number, data?: string): Promise<void> {
+    if (!this.ws) return Promise.resolve();
+
+    this.ws.removeListener('close', this._listeners.close);
+    return new Promise(resolve => {
+      this.ws.once('close', (code: number, reason: string) => {
+        this.node.emit('close', code, reason);
+        resolve();
+      });
+
+      this.ws.close(code, data);
+    });
+  }
+
   private _reconnect() {
     if (this.ws.readyState === WebSocket.CLOSED) this.backoff.backoff();
   }
