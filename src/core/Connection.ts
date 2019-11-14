@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import backoff = require('backoff');
-import Node from '../base/Node';
+import BaseNode from '../base/Node';
 import { IncomingMessage } from 'http';
 
 interface Sendable {
@@ -21,7 +21,7 @@ export interface Options extends WebSocket.ClientOptions {
   resumeTimeout?: number;
 }
 
-export default class Connection<T extends Node = Node> {
+export default class Connection<T extends BaseNode = BaseNode> {
   public readonly node: T;
   public url: string;
   public options: Options;

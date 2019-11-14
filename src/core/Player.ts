@@ -1,4 +1,4 @@
-import Node, { VoiceServerUpdate, VoiceStateUpdate } from '../base/Node';
+import BaseNode, { VoiceServerUpdate, VoiceStateUpdate } from '../base/Node';
 import { Track } from './Http';
 import { EventEmitter } from 'events';
 
@@ -35,7 +35,7 @@ export interface JoinOptions {
   deaf?: boolean;
 }
 
-export default class Player<T extends Node = Node> extends EventEmitter {
+export default class Player<T extends BaseNode = BaseNode> extends EventEmitter {
   public readonly node: T;
   public guildID: string;
   public status: Status = Status.INSTANTIATED;
@@ -89,7 +89,7 @@ export default class Player<T extends Node = Node> extends EventEmitter {
     return this.node.voiceServers.get(this.guildID);
   }
 
-  public async moveTo(node: T) {
+  public async moveTo(node: BaseNode) {
     if (this.node === node) return;
     if (!this.voiceServer || !this.voiceState) throw new Error('no voice state/server data to move');
 
