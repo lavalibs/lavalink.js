@@ -1,7 +1,7 @@
 import { request, IncomingMessage, IncomingHttpHeaders, STATUS_CODES } from 'http';
 import { URL } from 'url';
-import Node from '../base/Node';
 import RoutePlanner from './RoutePlanner';
+import BaseNode from '../base/Node';
 
 export class HTTPError extends Error {
   public readonly statusMessage!: string;
@@ -54,12 +54,12 @@ export interface Track {
 }
 
 export default class Http {
-  public readonly node: Node;
+  public readonly node: BaseNode;
   public input: string;
   public base?: string;
   public routeplanner: RoutePlanner = new RoutePlanner(this);
 
-  constructor(node: Node, input: string, base?: string) {
+  constructor(node: BaseNode, input: string, base?: string) {
     this.node = node;
     this.input = input;
     this.base = base;
