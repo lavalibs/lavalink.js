@@ -1,5 +1,6 @@
 import { request, IncomingMessage, IncomingHttpHeaders, STATUS_CODES } from 'http';
 import { URL } from 'url';
+import RoutePlanner from './RoutePlanner';
 import BaseNode from '../base/Node';
 
 export class HTTPError extends Error {
@@ -56,6 +57,7 @@ export default class Http {
   public readonly node: BaseNode;
   public input: string;
   public base?: string;
+  public routeplanner: RoutePlanner = new RoutePlanner(this);
 
   constructor(node: BaseNode, input: string, base?: string) {
     this.node = node;
@@ -72,7 +74,7 @@ export default class Http {
     url.pathname = '/loadtracks';
     url.searchParams.append('identifier', identifier);
 
-    return this._make('GET', url);
+    return this.do('GET', url);
   }
 
   public decode(track: string): Promise<Track>;
@@ -82,15 +84,15 @@ export default class Http {
     const url = this.url();
     if (Array.isArray(tracks)) {
       url.pathname = '/decodetracks';
-      return this._make('POST', url, Buffer.from(JSON.stringify(tracks)));
+      return this.do('POST', url, Buffer.from(JSON.stringify(tracks)));
     } else {
       url.pathname = '/decodetrack';
       url.searchParams.append('track', tracks);
-      return this._make('GET', url);
+      return this.do('GET', url);
     }
   }
 
-  private async _make<T = any>(method: string, url: URL, data?: Buffer): Promise<T> {
+  public async do<T = any>(method: string, url: URL, data?: Buffer): Promise<T> {
     const message = await new Promise<IncomingMessage>((resolve) => {
       const req = request({
         method,
