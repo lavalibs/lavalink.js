@@ -13,6 +13,7 @@ export enum Status {
 }
 
 export enum EventType {
+  TRACK_START = "TrackStartEvent",
   TRACK_END = 'TrackEndEvent',
   TRACK_EXCEPTION = 'TrackExceptionEvent',
   TRACK_STUCK = 'TrackStuckEvent',
@@ -47,6 +48,9 @@ export default class Player<T extends BaseNode = BaseNode> extends EventEmitter 
 
     this.on('event', (d) => {
       switch (d.type) {
+        case EventType.TRACK_START:
+          this.status = Status.PLAYING
+          break;
         case EventType.TRACK_END:
           if (d.reason !== 'REPLACED') this.status = Status.ENDED;
           break;
