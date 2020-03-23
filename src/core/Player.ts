@@ -13,7 +13,7 @@ export enum Status {
 }
 
 export enum EventType {
-  TRACK_START = "TrackStartEvent",
+  TRACK_START = 'TrackStartEvent',
   TRACK_END = 'TrackEndEvent',
   TRACK_EXCEPTION = 'TrackExceptionEvent',
   TRACK_STUCK = 'TrackStuckEvent',
