@@ -39,18 +39,20 @@ export interface PlaylistInfo {
   selectedTrack?: number
 }
 
+export interface TrackInfo {
+  identifier: string;
+  isSeekable: boolean;
+  author: string;
+  length: number;
+  isStream: boolean;
+  position: number;
+  title: string;
+  uri: string;
+}
+
 export interface Track {
   track: string;
-  info: {
-    identifier: string;
-    isSeekable: boolean;
-    author: string;
-    length: number;
-    isStream: boolean;
-    position: number;
-    title: string;
-    uri: string;
-  };
+  info: TrackInfo;
 }
 
 export default class Http {
@@ -77,10 +79,10 @@ export default class Http {
     return this.do('GET', url);
   }
 
-  public decode(track: string): Promise<Track>;
+  public decode(track: string): Promise<TrackInfo>;
   public decode(tracks: string[]): Promise<Track[]>;
-  public decode(tracks: string | string[]): Promise<Track | Track[]>;
-  public decode(tracks: string | string[]): Promise<Track | Track[]> {
+  public decode(tracks: string | string[]): Promise<TrackInfo | Track[]>;
+  public decode(tracks: string | string[]): Promise<TrackInfo | Track[]> {
     const url = this.url();
     if (Array.isArray(tracks)) {
       url.pathname = '/decodetracks';

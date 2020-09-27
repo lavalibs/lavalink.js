@@ -1,7 +1,7 @@
 import WebSocket = require('ws');
 import { EventEmitter } from 'events';
 import Connection, { Options as ConnectionOptions } from '../core/Connection';
-import Http, { Track, TrackResponse } from '../core/Http';
+import Http, { Track, TrackInfo, TrackResponse } from '../core/Http';
 import PlayerStore from '../core/PlayerStore';
 
 export interface VoiceStateUpdate {
@@ -74,9 +74,9 @@ export default abstract class BaseNode extends EventEmitter {
     throw new Error('no available http module');
   }
 
-  public decode(track: string): Promise<Track>;
+  public decode(track: string): Promise<TrackInfo>;
   public decode(tracks: string[]): Promise<Track[]>;
-  public decode(tracks: string | string[]): Promise<Track | Track[]> {
+  public decode(tracks: string | string[]): Promise<TrackInfo | Track[]> {
     if (this.http) return this.http.decode(tracks);
     throw new Error('no available http module');
   }
