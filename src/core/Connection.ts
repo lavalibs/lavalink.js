@@ -2,7 +2,7 @@ import * as WebSocket from 'ws';
 import backoff = require('backoff');
 import BaseNode from '../base/Node';
 import { IncomingMessage } from 'http';
-import * as packageJson from '../../package.json';
+import { version, name } from '../../package.json';
 
 interface Sendable {
   resolve: () => void;
@@ -102,7 +102,7 @@ export default class Connection<T extends BaseNode = BaseNode> {
     const headers: Headers = {
       Authorization: this.node.password,
       'Num-Shards': this.node.shardCount || 1,
-      "Client-Name": `lavalink.js/v${packageJson.version}`,
+      "Client-Name": `${name}/v${version}`,
       'User-Id': this.node.userID,
     };
 
