@@ -2,6 +2,7 @@ import * as WebSocket from 'ws';
 import backoff = require('backoff');
 import BaseNode from '../base/Node';
 import { IncomingMessage } from 'http';
+import * as packageJson from '../../package.json';
 
 interface Sendable {
   resolve: () => void;
@@ -11,7 +12,8 @@ interface Sendable {
 
 interface Headers {
   Authorization: string;
-  'Num-Shards': number;
+  'Num-Shards': number; // TODO: remove in next major version
+  'Client-Name': string;
   'User-Id': string;
   'Resume-Key'?: string;
 }
@@ -100,6 +102,7 @@ export default class Connection<T extends BaseNode = BaseNode> {
     const headers: Headers = {
       Authorization: this.node.password,
       'Num-Shards': this.node.shardCount || 1,
+      "Client-Name": `lavalink.js/v${packageJson.version}`,
       'User-Id': this.node.userID,
     };
 
