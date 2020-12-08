@@ -38,21 +38,21 @@ export interface FilterOptions {
 }
 
 export interface KaraokeOptions {
-  level: number;
-  monoLevel: number;
-  filterBand: number;
-  filterWidth: number;
+  level?: number;
+  monoLevel?: number;
+  filterBand?: number;
+  filterWidth?: number;
 }
 
 export interface TimescaleOptions {
-  speed: number;
-  pitch: number;
-  rate: number;
+  speed?: number;
+  pitch?: number;
+  rate?: number;
 }
 
 export interface FrequencyDepthOptions {
-  frequency: number;
-  depth: number;
+  frequency?: number;
+  depth?: number;
 }
 
 export interface EqualizerBand {
