@@ -6,8 +6,8 @@
   "types": "typings/src/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "yarn prepare && env-cmd .env node --trace-warnings dist/test/index.js",
-    "start:cluster": "yarn prepare && env-cmd .env node --trace-warnings dist/test/cluster.js",
+    "start:dev": "pnpm prepare && env-cmd .env node --trace-warnings dist/test/index.js",
+    "start:cluster": "pnpm prepare && env-cmd .env node --trace-warnings dist/test/cluster.js",
     "prepare": "rimraf typings dist && tsc"
   },
   "repository": {
@@ -25,15 +25,15 @@
   "homepage": "https://github.com/lavalibs/lavalink.js#readme",
   "devDependencies": {
     "@spectacles/gateway": "^0.10.0",
-    "@spectacles/types": "^0.2.0",
+    "@spectacles/types": "^0.2.1",
     "@types/backoff": "^2.5.1",
-    "@types/ws": "^6.0.0",
-    "env-cmd": "^8.0.2",
-    "rimraf": "^2.6.3",
-    "typescript": "^3.0.3"
+    "@types/ws": "^6.0.4",
+    "env-cmd": "^10.1.0",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.1.2"
   },
   "dependencies": {
     "backoff": "^2.5.0",
-    "ws": "^6.0.0"
+    "ws": "^7.4.0"
   }
 }
