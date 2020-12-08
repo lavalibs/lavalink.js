@@ -1,6 +1,7 @@
 import BaseNode, { VoiceServerUpdate, VoiceStateUpdate } from '../base/Node';
 import { Track } from './Http';
 import { EventEmitter } from 'events';
+import { deprecate } from 'util';
 
 export enum Status {
   INSTANTIATED,
@@ -24,6 +25,34 @@ export interface PlayerOptions {
   start?: number;
   end?: number;
   noReplace?: boolean;
+  pause?: boolean;
+}
+
+export interface FilterOptions {
+  volume?: number;
+  equalizer?: EqualizerBand[];
+  karaoke?: KaraokeOptions;
+  timescale?: TimescaleOptions;
+  tremolo?: FrequencyDepthOptions;
+  vibrato?: FrequencyDepthOptions;
+}
+
+export interface KaraokeOptions {
+  level?: number;
+  monoLevel?: number;
+  filterBand?: number;
+  filterWidth?: number;
+}
+
+export interface TimescaleOptions {
+  speed?: number;
+  pitch?: number;
+  rate?: number;
+}
+
+export interface FrequencyDepthOptions {
+  frequency?: number;
+  depth?: number;
 }
 
 export interface EqualizerBand {
@@ -123,12 +152,13 @@ export default class Player<T extends BaseNode = BaseNode> extends EventEmitter 
     })
   }
 
-  public async play(track: string | Track, { start = 0, end = 0, noReplace }: PlayerOptions = {}) {
+  public async play(track: string | Track, { start = 0, end = 0, noReplace, pause }: PlayerOptions = {}) {
     await this.send('play', {
       track: typeof track === 'object' ? track.track : track,
       startTime: start,
       endTime: end,
       noReplace,
+      pause
     });
 
     this.status = Status.PLAYING;
@@ -140,6 +170,10 @@ export default class Player<T extends BaseNode = BaseNode> extends EventEmitter 
 
   public setEqualizer(bands: EqualizerBand[]) {
     return this.send('equalizer', { bands });
+  }
+
+  public setFilters(options: FilterOptions) {
+    return this.send('filters', options);
   }
 
   public seek(position: number) {
@@ -183,3 +217,7 @@ export default class Player<T extends BaseNode = BaseNode> extends EventEmitter 
     }
   }
 }
+
+Player.prototype.setVolume = deprecate(Player.prototype.setVolume, "Player#setVolume: use setFilters instead");
+
+Player.prototype.setEqualizer = deprecate(Player.prototype.setEqualizer, "Player#setEqualizer: use setFilters instead");
