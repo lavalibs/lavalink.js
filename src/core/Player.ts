@@ -29,12 +29,12 @@ export interface PlayerOptions {
 }
 
 export interface FilterOptions {
-  volume: number;
-  equalizer: EqualizerBand[];
-  karaoke: KaraokeOptions;
-  timescale: TimescaleOptions;
-  tremolo: FrequencyDepthOptions;
-  vibrato: FrequencyDepthOptions;
+  volume?: number;
+  equalizer?: EqualizerBand[];
+  karaoke?: KaraokeOptions;
+  timescale?: TimescaleOptions;
+  tremolo?: FrequencyDepthOptions;
+  vibrato?: FrequencyDepthOptions;
 }
 
 export interface KaraokeOptions {
