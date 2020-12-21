@@ -152,7 +152,7 @@ export default class Player<T extends BaseNode = BaseNode> extends EventEmitter 
     })
   }
 
-  public async play(track: string | Track, { start = 0, end = 0, noReplace, pause }: PlayerOptions = {}) {
+  public async play(track: string | Track, { start, end, noReplace, pause }: PlayerOptions = {}) {
     await this.send('play', {
       track: typeof track === 'object' ? track.track : track,
       startTime: start,
