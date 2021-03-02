@@ -35,6 +35,23 @@ export interface FilterOptions {
   timescale?: TimescaleOptions;
   tremolo?: FrequencyDepthOptions;
   vibrato?: FrequencyDepthOptions;
+  rotation?: RotationOptions;
+  distortion?: DistortionOptions
+}
+
+export interface RotationOptions {
+    rotationHz?: number;
+}
+
+export interface DistortionOptions {
+    sinOffset?: number;
+    sinScale?: number;
+    cosOffset?: number;
+    cosScale?: number;
+    tanOffset?: number;
+    tanScale?: number;
+    offset?: number;
+    scale?: number;
 }
 
 export interface KaraokeOptions {
