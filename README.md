@@ -69,7 +69,7 @@ await player.destroy();
 
 ### Events
 
-The client and players are event emitters. Events will only get emitted on a player if the event has a guild ID. The client will always emit every event. Events are emitted with the name as the `op` property from the event; see the [lavalink implementation page](https://github.com/Frederikam/Lavalink/blob/master/IMPLEMENTATION.md#incoming-messages) for details on available events.
+The client and players are event emitters. Events will only get emitted on a player if the event has a guild ID. The client will always emit every event. Events are emitted with the name as the `op` property from the event; see the [lavalink implementation page](https://github.com/freyacodes/Lavalink/blob/master/IMPLEMENTATION.md#incoming-messages) for details on available events.
 
 ```js
 voice.players.get('guild id').on('event', (d) => {
@@ -127,7 +127,7 @@ Additionally, this library does not currently support external caches to avoid u
 
 ## Reference
 
-See the [Lavalink reference](https://github.com/Frederikam/Lavalink/blob/master/IMPLEMENTATION.md) for details.
+See the [Lavalink reference](https://github.com/freyacodes/Lavalink/blob/master/IMPLEMENTATION.md) for details.
 
 ### `Player`
 
