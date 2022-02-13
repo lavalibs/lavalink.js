@@ -36,7 +36,9 @@ export interface FilterOptions {
   tremolo?: FrequencyDepthOptions;
   vibrato?: FrequencyDepthOptions;
   rotation?: RotationOptions;
-  distortion?: DistortionOptions
+  distortion?: DistortionOptions;
+  channelMix?: ChannelMixOptions;
+  lowPass?: LowPassOptions;
 }
 
 export interface RotationOptions {
@@ -52,6 +54,17 @@ export interface DistortionOptions {
     tanScale?: number;
     offset?: number;
     scale?: number;
+}
+
+export interface ChannelMixOptions {
+  leftToLeft: number;
+  leftToRight: number;
+  rightToLeft: number;
+  rightToRight: number;
+}
+
+export interface LowPassOptions {
+  smoothing: number;
 }
 
 export interface KaraokeOptions {
