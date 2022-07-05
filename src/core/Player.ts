@@ -248,6 +248,4 @@ export default class Player<T extends BaseNode = BaseNode> extends EventEmitter 
   }
 }
 
-Player.prototype.setVolume = deprecate(Player.prototype.setVolume, "Player#setVolume: use setFilters instead");
-
 Player.prototype.setEqualizer = deprecate(Player.prototype.setEqualizer, "Player#setEqualizer: use setFilters instead");
