@@ -138,14 +138,7 @@ export default class Player<T extends BaseNode = BaseNode> extends EventEmitter 
   }
 
   public get voiceState(): VoiceStateUpdate | undefined {
-    const session = this.node.voiceStates.get(this.guildID);
-    if (!session) return;
-
-    return {
-      guild_id: this.guildID,
-      user_id: this.node.userID,
-      session_id: session,
-    };
+    return this.node.voiceStates.get(this.guildID);
   }
 
   public get voiceServer(): VoiceServerUpdate | undefined {
@@ -228,10 +221,10 @@ export default class Player<T extends BaseNode = BaseNode> extends EventEmitter 
     this.node.players.delete(this.guildID);
   }
 
-  public voiceUpdate(sessionId: string, event: VoiceServerUpdate) {
+  public voiceUpdate(state: VoiceStateUpdate, server: VoiceServerUpdate) {
     return this.send('voiceUpdate', {
-      event,
-      sessionId,
+      event: server,
+      sessionId: state.session_id,
     });
   }
 
